@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 /*** Copied from lib_GPIOCTRL ************************************************/
 // https://github.com/ADBeta/CH32V003_lib_GPIOCTRL
@@ -56,8 +57,11 @@ typedef enum {
 /*** Software I2C Functions **************************************************/
 // I2C Bus Data. Multiple Busses can be defined at runtime
 typedef struct {
-	gpio_pin_t pin_scl, pin_sda;    // SCL and SDA Pins. e.g GPIO_PD4
-	uint32_t hz;                    // I2C Bus Speed (In Hz)
+	gpio_pin_t pin_scl, pin_sda;  // SCL and SDA Pins. e.g GPIO_PD4
+	uint32_t hz;                  // I2C Bus Speed (In Hz)
+	
+	// Private Variables
+	bool _active;                 // Keep track of I2C bus state (repeat start)
 } i2c_bus_t;
 
 
@@ -72,12 +76,12 @@ void swi2c_init(i2c_bus_t *i2c, const gpio_pin_t scl, const gpio_pin_t sda);
 /// @breif Sends a START Command to the I2C Bus
 /// @param i2c_bus_t i2c, I2C Bus Struct
 /// @return None
-swi2c_start(const i2c_bus_t *i2c);
+void swi2c_start(i2c_bus_t *i2c);
 
 /// @breif Sends a STOP Command to the I2C Bus
 /// @param i2c_bus_t i2c, I2C Bus Struct
 /// @return None
-swi2c_stop(const i2c_bus_t *i2c);
+void swi2c_stop(i2c_bus_t *i2c);
 
 
 

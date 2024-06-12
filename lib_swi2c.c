@@ -11,6 +11,7 @@
 #include "lib_swi2c.h"
 
 #include <stdint.h>
+#include <stdbool.h>
 
 
 /*** Copied from lib_GPIOCTRL ************************************************/
@@ -143,17 +144,17 @@ static void gpio_set_mode(const gpio_pin_t pin, const gpio_mode_t mode)
 
 /*** Software I2C Functions **************************************************/
 // Asserting I2C lines is when they are OUTPUT Pulling LOW
-#define ASSERT_SCL gpio_set_mode(i2c->pin_scl, GPIO_OUTPUT_10MHZ_PP); 
-#define ASSERT_SDA gpio_set_mode(i2c->pin_sda, GPIO_OUTPUT_10MHZ_PP);
+#define ASSERT_SCL gpio_set_mode(i2c->pin_scl, OUTPUT_10MHZ_PP); 
+#define ASSERT_SDA gpio_set_mode(i2c->pin_sda, OUTPUT_10MHZ_PP);
 
 // Releasing I2C lines is setting them INPUT FLOATING, Pulled HIGH Externally
-#define RELEASE_SCL gpio_set_mode(i2c->pin_scl, GPIO_INPUT_FLOATING); 
-#define RELEASE_SDA gpio_set_mode(i2c->pin_sda, GPIO_INPUT_FLOATING);
+#define RELEASE_SCL gpio_set_mode(i2c->pin_scl, INPUT_FLOATING); 
+#define RELEASE_SDA gpio_set_mode(i2c->pin_sda, INPUT_FLOATING);
 
 /*** Helper Functions ********************************************************/
 // Waits for the calculated amount of time (Limits bus speed)
 // TODO:
-static void wait()
+__attribute__((always_inline)) static inline void wait()
 {
 
 }
@@ -162,19 +163,63 @@ static void wait()
 /*** Library Functions *******************************************************/
 void swi2c_init(i2c_bus_t *i2c, const gpio_pin_t scl, const gpio_pin_t sda)
 {
+	i2c->pin_scl = scl;
+	i2c->pin_sda = sda;
+	
+	// Set the Output register to LOW (Pulldown in output)
+	gpio_digital_write(scl, GPIO_LOW);
+	gpio_digital_write(sda, GPIO_LOW);
 
+	// Set STOP Condition to get the bus into a known state
+	swi2c_stop(i2c);
 }
 
 
-swi2c_start(const i2c_bus_t *i2c)
+void swi2c_start(i2c_bus_t *i2c)
 {
+	// START Condition is SDA Going LOW while SCL is HIGH
+	
+	// If Bus is active, do a repeated START
+	if(i2c->_active)
+	{
+		RELEASE_SDA;    // SDA HIGH
+		wait();
+		RELEASE_SCL;    // SCL HIGH
 
+		// TODO: Clock stretch
+		wait();
+	}
+
+	// START Condition
+	ASSERT_SDA;        // SDA LOW
+	ASSERT_SCL;        // SCL LOW
+	
+	// Mark the I2C Bus as Active
+	i2c->_active = true;
 }
 
 
-swi2c_stop(const i2c_bus_t *i2c)
+void swi2c_stop(i2c_bus_t *i2c)
 {
-
+	// Stop condition is defined by SDA going HIGH while SCL is HIGH
+	
+	// Pull SDA LOW to make sure Conditions are met
+	ASSERT_SDA;     // SDA LOW 
+	wait();
+	RELEASE_SCL;    // SCL HIGH
+	
+	// TODO: Exit if clock stretching fails
+	//if(clock_stretch(ptr) != 0) return;
+	wait();
+	
+	// Set SDA HIGH while SCL is HIGH
+	RELEASE_SDA;    // SDA HIGH
+	wait();
+	
+	// If SDA is not what we expect, something went wrong
+	// TODO:
+	
+	i2c->_active = false;
 }
 
 

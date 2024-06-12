@@ -22,7 +22,6 @@ SYMBOL TABLE:
 00000de7  w      .debug_info	00000000 .hidden ch32v003fun.c.aa2d456a
 20000800 g       .data	00000000 __global_pointer$
 0000011a g     F .text	00000002 TIM1_CC_IRQHandler
-00001bbd  w      .debug_info	00000000 .hidden i2ctest.c.e972af17
 0000011a g     F .text	00000002 HardFault_Handler
 0000011a g     F .text	00000002 SysTick_Handler
 0000011a g     F .text	00000002 PVD_IRQHandler
@@ -59,6 +58,7 @@ SYMBOL TABLE:
 0000011a g     F .text	00000002 TIM1_BRK_IRQHandler
 20000000 g       .data	00000000 _edata
 0000019c g       .dlalign	00000000 _data_lma
+00001bbd  w      .debug_info	00000000 .hidden i2ctest.c.7f1974cb
 0000011a g     F .text	00000002 DMA1_Channel2_IRQHandler
 000000a0 g     F .text	0000007a handle_reset
 0000011a g     F .text	00000002 FLASH_IRQHandler
