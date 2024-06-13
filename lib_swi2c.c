@@ -160,12 +160,25 @@ __attribute__((always_inline)) static inline void wait()
 }
 
 
+//TODO: test this works
+static i2c_err_t clk_stretch(const gpio_pin_t scl)
+{
+	uint8_t clock_waits = 10;
+	while(gpio_digital_read(scl) == GPIO_LOW)
+	{
+		if(!clock_waits--) return I2C_ERR_TIMEOUT;
+		wait();
+	}
+
+	return I2C_OK;
+}
+
 /*** Library Functions *******************************************************/
 i2c_err_t swi2c_init(i2c_bus_t *i2c)
 {
 	// Set the Output register to LOW (Pulldown in output)
-	gpio_digital_write(scl, GPIO_LOW);
-	gpio_digital_write(sda, GPIO_LOW);
+	gpio_digital_write(i2c->pin_scl, GPIO_LOW);
+	gpio_digital_write(i2c->pin_sda, GPIO_LOW);
 
 	// Set STOP Condition to get the bus into a known state
 	return swi2c_stop(i2c);
@@ -175,16 +188,15 @@ i2c_err_t swi2c_init(i2c_bus_t *i2c)
 i2c_err_t swi2c_start(i2c_bus_t *i2c)
 {
 	// START Condition is SDA Going LOW while SCL is HIGH
-	
+	i2c_err_t stat = I2C_OK;
+
 	// If Bus is active, do a repeated START
 	if(i2c->_active)
 	{
 		RELEASE_SDA;    // SDA HIGH
 		wait();
 		RELEASE_SCL;    // SCL HIGH
-
-		// TODO: Clock stretch
-		wait();
+		if( (stat = clk_stretch(i2c->pin_scl)) != I2C_OK) return stat;
 	}
 
 	// START Condition
@@ -193,23 +205,20 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
 	
 	// Mark the I2C Bus as Active
 	i2c->_active = true;
-
-	return I2C_OK;
+	return stat;
 }
 
 
 i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 {
 	// Stop condition is defined by SDA going HIGH while SCL is HIGH
-	
+	i2c_err_t stat = I2C_OK;
+
 	// Pull SDA LOW to make sure Conditions are met
 	ASSERT_SDA;     // SDA LOW 
 	wait();
 	RELEASE_SCL;    // SCL HIGH
-	
-	// TODO: Exit if clock stretching fails
-	//if(clock_stretch(ptr) != 0) return;
-	wait();
+	if( (stat = clk_stretch(i2c->pin_scl)) != I2C_OK) return stat;
 	
 	// Set SDA HIGH while SCL is HIGH
 	RELEASE_SDA;    // SDA HIGH
@@ -219,8 +228,7 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 	// TODO:
 	
 	i2c->_active = false;
-
-	return I2C_OK;
+	return stat;
 }
 
 
