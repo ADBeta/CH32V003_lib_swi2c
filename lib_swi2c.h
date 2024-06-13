@@ -55,6 +55,14 @@ typedef enum {
 } gpio_pin_t;
 
 /*** Software I2C Functions **************************************************/
+// I2C Error / Return states
+typedef enum {
+	I2C_OK      = 0,
+	I2C_ERR_TIMEOUT,
+	I2C_ERR_NACK,
+} i2c_err_t;
+
+
 // I2C Bus Data. Multiple Busses can be defined at runtime
 typedef struct {
 	gpio_pin_t pin_scl, pin_sda;  // SCL and SDA Pins. e.g GPIO_PD4
@@ -69,19 +77,19 @@ typedef struct {
 /// @param i2c_bus_t i2c, I2C Bus Struct
 /// @param gpio_pin_t scl, SCL I2C Pin
 /// @param gpio_pin_t sda, SDA I2C Pin
-/// @return None
-void swi2c_init(i2c_bus_t *i2c, const gpio_pin_t scl, const gpio_pin_t sda);
+/// @return i2c_err_t return state
+i2c_err_t swi2c_init(i2c_bus_t *i2c);
 
 /*** Hardware Control ********************************************************/
 /// @breif Sends a START Command to the I2C Bus
 /// @param i2c_bus_t i2c, I2C Bus Struct
-/// @return None
-void swi2c_start(i2c_bus_t *i2c);
+/// @return i2c_err_t return state
+i2c_err_t swi2c_start(i2c_bus_t *i2c);
 
 /// @breif Sends a STOP Command to the I2C Bus
 /// @param i2c_bus_t i2c, I2C Bus Struct
 /// @return None
-void swi2c_stop(i2c_bus_t *i2c);
+i2c_err_t swi2c_stop(i2c_bus_t *i2c);
 
 
 

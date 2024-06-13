@@ -161,21 +161,18 @@ __attribute__((always_inline)) static inline void wait()
 
 
 /*** Library Functions *******************************************************/
-void swi2c_init(i2c_bus_t *i2c, const gpio_pin_t scl, const gpio_pin_t sda)
+i2c_err_t swi2c_init(i2c_bus_t *i2c)
 {
-	i2c->pin_scl = scl;
-	i2c->pin_sda = sda;
-	
 	// Set the Output register to LOW (Pulldown in output)
 	gpio_digital_write(scl, GPIO_LOW);
 	gpio_digital_write(sda, GPIO_LOW);
 
 	// Set STOP Condition to get the bus into a known state
-	swi2c_stop(i2c);
+	return swi2c_stop(i2c);
 }
 
 
-void swi2c_start(i2c_bus_t *i2c)
+i2c_err_t swi2c_start(i2c_bus_t *i2c)
 {
 	// START Condition is SDA Going LOW while SCL is HIGH
 	
@@ -196,10 +193,12 @@ void swi2c_start(i2c_bus_t *i2c)
 	
 	// Mark the I2C Bus as Active
 	i2c->_active = true;
+
+	return I2C_OK;
 }
 
 
-void swi2c_stop(i2c_bus_t *i2c)
+i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 {
 	// Stop condition is defined by SDA going HIGH while SCL is HIGH
 	
@@ -220,6 +219,8 @@ void swi2c_stop(i2c_bus_t *i2c)
 	// TODO:
 	
 	i2c->_active = false;
+
+	return I2C_OK;
 }
 
 
