@@ -11,8 +11,14 @@
 
 #include "lib_swi2c.h"
 
+i2c_bus_t bus = {
+	.pin_scl = GPIO_PC4,
+	.pin_sda = GPIO_PC5
+};
 
 int main()
 {
 	SystemInit();
+
+	swi2c_master_tx_byte(&bus, 0xF0);
 }
