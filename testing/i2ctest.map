@@ -45,6 +45,7 @@ SYMBOL TABLE:
 0000011a g     F .text	00000002 DefaultIRQHandler
 20000000 g       .dalign	00000000 _data_vma
 0000011c g     F .text	0000000e NMI_RCC_CSS_IRQHandler
+00001bbd  w      .debug_info	00000000 .hidden i2ctest.c.e9e9b4ab
 0000018c g     F .text	0000000e main
 0000011a g     F .text	00000002 DMA1_Channel5_IRQHandler
 0000012a g     F .text	00000062 SystemInit
@@ -58,7 +59,6 @@ SYMBOL TABLE:
 0000011a g     F .text	00000002 TIM1_BRK_IRQHandler
 20000000 g       .data	00000000 _edata
 0000019c g       .dlalign	00000000 _data_lma
-00001bbd  w      .debug_info	00000000 .hidden i2ctest.c.7f1974cb
 0000011a g     F .text	00000002 DMA1_Channel2_IRQHandler
 000000a0 g     F .text	0000007a handle_reset
 0000011a g     F .text	00000002 FLASH_IRQHandler

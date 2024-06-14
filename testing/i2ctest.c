@@ -12,11 +12,7 @@
 #include "lib_swi2c.h"
 
 
-
-
 int main()
 {
 	SystemInit();
-
-
 }
