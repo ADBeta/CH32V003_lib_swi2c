@@ -14,6 +14,9 @@
 #include <stdbool.h>
 
 
+// TODO: Remove
+#include <stdio.h>
+
 /*** Copied from lib_GPIOCTRL ************************************************/
 // https://github.com/ADBeta/CH32V003_lib_GPIOCTRL
 
@@ -160,7 +163,6 @@ __attribute__((always_inline)) static inline void wait()
 }
 
 
-//TODO: test this works
 static i2c_err_t clk_stretch(const gpio_pin_t scl)
 {
 	uint8_t clock_waits = 10;
@@ -171,6 +173,46 @@ static i2c_err_t clk_stretch(const gpio_pin_t scl)
 	}
 
 	return I2C_OK;
+}
+
+static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
+{
+	// Set the Data line depending on bit
+	if(bit)
+	{
+		RELEASE_SDA;
+	} else {
+		ASSERT_SDA;
+	}
+
+	wait();
+	RELEASE_SCL;   // SCL HIGH
+	wait();
+
+	// Clock stretch, wait for SCL to go LOW
+	i2c_err_t stat = clk_stretch(i2c->pin_scl);
+	ASSERT_SCL;   // SCL LOW
+	
+	// I2C_OK if successful, propegates error if not
+	return stat;
+}
+
+static bool master_rx_bit(const i2c_bus_t *i2c)
+{
+	bool bit = 0;
+	// Release the SDA pin so the slave can set data, then release SCL
+	// to request data
+	RELEASE_SDA;
+	RELEASE_SCL;
+
+	// Wait for clk stretch, Only read pin if it's OK
+	if(clk_stretch(i2c->pin_scl) == I2C_OK)
+	{
+		bit = (bool)gpio_digital_read(i2c->pin_sda);
+	}
+
+	ASSERT_SCL; // SCL LOW
+	return bit;
 }
 
 /*** Library Functions *******************************************************/
@@ -218,7 +260,7 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 	ASSERT_SDA;     // SDA LOW 
 	wait();
 	RELEASE_SCL;    // SCL HIGH
-	if( (stat = clk_stretch(i2c->pin_scl)) != I2C_OK) return stat;
+	stat = clk_stretch(i2c->pin_scl);
 	
 	// Set SDA HIGH while SCL is HIGH
 	RELEASE_SDA;    // SDA HIGH
@@ -231,8 +273,46 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 	return stat;
 }
 
+i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data)
+{
+	i2c_err_t stat = I2C_OK;
 
+	// Transmit bits MSB First
+	uint8_t index = 8;
+	while(index--)
+	{
+		master_tx_bit(i2c, data & 0x80);
+		data = data << 1;
+	}
+	
+	// Read ACK bit (0 = ACK, 1 = NACK)
+	if( (stat = master_rx_bit(i2c)) == 0x01) stat = I2C_ERR_NACK;
+	return stat;
+}
 
+i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, const uint8_t addr,
+								const uint8_t *data, uint16_t size)
+{
+	// Catch any bad inputs
+	if(i2c == NULL || data == NULL || size == 0) return I2C_ERR_INVALID_ARGS;
+
+	i2c_err_t stat = I2C_OK;
+
+	// Gaurd each step from failure
+	// Send START Condition and address byte
+	if( (stat = swi2c_start(i2c)) == I2C_OK && 
+		(stat = swi2c_master_tx_byte(i2c, addr)) == I2C_OK)
+	{
+		while(size--)
+		{
+			swi2c_master_tx_byte(i2c, *data);
+			++data;
+		}
+	}
+
+	swi2c_stop(i2c);
+	return stat;
+}
 
 
 

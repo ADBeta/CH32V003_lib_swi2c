@@ -60,6 +60,7 @@ typedef enum {
 	I2C_OK      = 0,
 	I2C_ERR_TIMEOUT,
 	I2C_ERR_NACK,
+	I2C_ERR_INVALID_ARGS,
 } i2c_err_t;
 
 
@@ -88,9 +89,27 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c);
 
 /// @breif Sends a STOP Command to the I2C Bus
 /// @param i2c_bus_t i2c, I2C Bus Struct
-/// @return None
+/// @return i2c_err_t return state
 i2c_err_t swi2c_stop(i2c_bus_t *i2c);
 
+/// @breif Transmits a Byte in Master Mode
+/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @param uint8_t byte, data to be sent
+/// @return i2c_err_t return state
+i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data);
+
+
+
+
+
+/// @breif Transmits data to a given Address
+/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @param uint8_t addr, address to send to
+/// @param uint8_t *data, data array pointer
+/// @param uint16_t size, number of bytes to transmit
+/// @return i2c_err_t return state
+i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, const uint8_t addr,
+								const uint8_t *data, uint16_t size);
 
 
 #endif
