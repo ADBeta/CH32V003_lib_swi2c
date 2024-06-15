@@ -15,10 +15,16 @@ Copy the `lib_swi2c.c` and `lib_swi2c.h` files in your project and #include them
 
 
 ## TODO
+**-- Currently Active --**  
+* Scan bus for device responses 
 * Optimise code for instruction count & speed (250KHz max currently)
 * ^^ set mode needs tidying, and stripping back from GPIOCTRL spec
+
+**-- Medium Term --**
 * Better documentation & how to use
 * Add speed limiting code to keep interface in spec
+
+**-- Long Term --**
 * Slave mode
 * Test on other MCU variants
 
