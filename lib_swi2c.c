@@ -290,8 +290,23 @@ i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data)
 	return stat;
 }
 
-i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, const uint8_t addr,
-								const uint8_t *data, uint16_t size)
+uint8_t swi2c_master_rx_byte(i2c_bus_t *i2c, bool ack)
+{
+	// Read bits MSB First
+	uint8_t index = 8;
+	uint8_t byte = 0x00;
+	while(index--) byte = (byte << 1) | master_rx_bit(i2c);
+	
+	// Write ACK Bit, ACK (0) = Read More,  NACK (1) = Stop Reading
+	master_tx_bit(i2c, ack);
+	return byte;
+}
+
+
+
+
+i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, 
+     const uint8_t addr, const uint8_t reg, const uint8_t *data, uint16_t size)
 {
 	// Catch any bad inputs
 	if(i2c == NULL || data == NULL || size == 0) return I2C_ERR_INVALID_ARGS;
@@ -303,10 +318,12 @@ i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, const uint8_t addr,
 	if( (stat = swi2c_start(i2c)) == I2C_OK && 
 		(stat = swi2c_master_tx_byte(i2c, addr)) == I2C_OK)
 	{
-		while(size--)
+		swi2c_master_tx_byte(i2c, reg);
+		while(size)
 		{
 			swi2c_master_tx_byte(i2c, *data);
 			++data;
+			--size;
 		}
 	}
 
@@ -314,5 +331,39 @@ i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, const uint8_t addr,
 	return stat;
 }
 
+i2c_err_t swi2c_master_receive(i2c_bus_t *i2c, 
+           const uint8_t addr, const uint8_t reg, uint8_t *data, uint16_t size)
+{
+	// Catch any bad inputs
+	if(i2c == NULL || data == NULL || size == 0) return I2C_ERR_INVALID_ARGS;
+
+	i2c_err_t stat = I2C_OK;
+
+	// Gaurd each step from failure
+	// Send START Condition and address byte
+	if( (stat = swi2c_start(i2c)) == I2C_OK && 
+		(stat = swi2c_master_tx_byte(i2c, addr)) == I2C_OK)
+	{
+		// Sed the Register Byte
+		swi2c_master_tx_byte(i2c, reg);
+
+		// Repeat the START Condition
+		swi2c_start(i2c);
+		// Send address in Read Mode
+		swi2c_master_tx_byte(i2c, addr | 0x01);
+
+		while(--size >= 1)
+		{
+			*data = swi2c_master_rx_byte(i2c, I2C_ACK);
+			++data;
+		}
+
+		// Last byte read has NACK bit set
+		*data = swi2c_master_rx_byte(i2c, I2C_NACK);
+	}
+
+	swi2c_stop(i2c);
+	return stat;
+}
 
 

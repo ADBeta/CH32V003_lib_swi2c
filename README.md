@@ -15,8 +15,8 @@ Copy the `lib_swi2c.c` and `lib_swi2c.h` files in your project and #include them
 
 
 ## TODO
-* Add I2C Error states
-* Add clock stretch to master, not to slave
+* Optimise code for instruction count & speed (250KHz max currently)
+* ^^ set mode needs tidying, and stripping back from GPIOCTRL spec
 * Better documentation & how to use
 * Add speed limiting code to keep interface in spec
 * Slave mode

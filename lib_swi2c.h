@@ -55,6 +55,9 @@ typedef enum {
 } gpio_pin_t;
 
 /*** Software I2C Functions **************************************************/
+#define I2C_ACK  0
+#define I2C_NACK 1
+
 // I2C Error / Return states
 typedef enum {
 	I2C_OK      = 0,
@@ -98,18 +101,35 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c);
 /// @return i2c_err_t return state
 i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data);
 
+/// @breif Receives a Byte in Master Mode
+/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @param bool ack, ack bit. ACK (LOW): Read more  NACK (HIGH): Stop Reading
+/// @return i2c_err_t return state
+uint8_t swi2c_master_rx_byte(i2c_bus_t *i2c, bool ack);
 
 
 
 
 /// @breif Transmits data to a given Address
 /// @param i2c_bus_t i2c, I2C Bus Struct
-/// @param uint8_t addr, address to send to
+/// @param uint8_t addr, address to write to
+/// @param uint8_t reg, register to write to
 /// @param uint8_t *data, data array pointer
 /// @param uint16_t size, number of bytes to transmit
 /// @return i2c_err_t return state
-i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, const uint8_t addr,
-								const uint8_t *data, uint16_t size);
+i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, 
+    const uint8_t addr, const uint8_t reg, const uint8_t *data, uint16_t size);
+
+
+/// @breif Receive data from a given Address
+/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @param uint8_t addr, address to read from
+/// @param uint8_t reg, register to read from
+/// @param uint8_t *data, data array pointer
+/// @param uint16_t size, number of bytes to receive
+/// @return i2c_err_t return state
+i2c_err_t swi2c_master_receive(i2c_bus_t *i2c, 
+          const uint8_t addr, const uint8_t reg, uint8_t *data, uint16_t size);
 
 
 #endif
