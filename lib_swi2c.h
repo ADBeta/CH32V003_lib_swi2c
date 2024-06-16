@@ -109,6 +109,10 @@ uint8_t swi2c_master_rx_byte(i2c_bus_t *i2c, bool ack);
 
 
 
+/// @breif Scans the Interface for devices that respond. Prints their address
+/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @return none
+void swi2c_scan(i2c_bus_t *i2c);
 
 /// @breif Transmits data to a given Address
 /// @param i2c_bus_t i2c, I2C Bus Struct

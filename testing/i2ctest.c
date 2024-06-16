@@ -16,17 +16,16 @@ i2c_bus_t bus = {
 	.pin_sda = GPIO_PC4
 };
 
-uint8_t data[4] = {0x69, 0x55, 0xaa, 0xee};
+uint8_t data[12];
 
 int main()
 {
 	SystemInit();
 
 	swi2c_init(&bus);
+	swi2c_scan(&bus);
 	while (1)
 	{
-		swi2c_master_receive(&bus, 0xD0, 0x3B, data, 2);
-
-		printf("0x%02X%02X\n", data[0], data[1]);
+		swi2c_master_receive(&bus, 0xD0, 0x3B, data, 12);
 	}
 }

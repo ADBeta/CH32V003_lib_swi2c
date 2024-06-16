@@ -12,9 +12,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-
-// TODO: Remove
 #include <stdio.h>
 
 /*** Copied from lib_GPIOCTRL ************************************************/
@@ -26,9 +23,10 @@
 typedef enum {
 	INPUT_ANALOG       = 0x00,
 	INPUT_FLOATING     = 0x04,
+	// NOTE: Removed to simplify code (speed)
 	// Mapped to INPUT_PP, Sets OUTDR based on the upper nibble
-	INPUT_PULLUP       = 0x18,
-	INPUT_PULLDOWN     = 0x08,
+	// INPUT_PULLUP       = 0x18,
+	// INPUT_PULLDOWN     = 0x08,
 	//
 	OUTPUT_10MHZ_PP    = 0x01,
 	OUTPUT_10MHZ_OD    = 0x05,
@@ -121,14 +119,14 @@ static inline gpio_state_t gpio_digital_read(const gpio_pin_t pin)
 	return GPIO_LOW;
 }
 
+/// NOTE: Modified to be slimmer and lightweight
 /// @breif Sets the Config and other needed Registers for a passed pin and mode
 /// @param gpio_pin_t pin, the GPIO Pin & Port Variable (e.g GPIO_PD6)
 /// @param gpio_mode_t mode, the GPIO Mode Variable (e.g OUTPUT_10MHZ_PP)
 /// @return None
-static void gpio_set_mode(const gpio_pin_t pin, const gpio_mode_t mode)
+__attribute__((always_inline))
+static inline void gpio_set_mode(const gpio_pin_t pin, const gpio_mode_t mode)
 {
-	// TODO: Any pin over 8 needs to change CFGHR
-	
 	// Make array of uint8_t from [pin] enum. See definition for details
 	uint8_t *byte = (uint8_t *)&pin;
 	
@@ -137,11 +135,7 @@ static void gpio_set_mode(const gpio_pin_t pin, const gpio_mode_t mode)
 
 	// Clear then set the GPIO Config Register
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
-	gpio_port_reg[ byte[0] ]->CFGLR |=  (mode & 0x0F) << (4 * byte[1]);
-
-	// If [mode] is INPUT_PULLUP or INPUT_PULLDOWN, set the [OUTDR] Register
-	if(mode == INPUT_PULLUP || mode == INPUT_PULLDOWN)
-		gpio_digital_write(pin, mode >> 4);
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
 }
 
 
@@ -222,6 +216,9 @@ i2c_err_t swi2c_init(i2c_bus_t *i2c)
 	gpio_digital_write(i2c->pin_scl, GPIO_LOW);
 	gpio_digital_write(i2c->pin_sda, GPIO_LOW);
 
+	RELEASE_SCL;
+	RELEASE_SDA;
+	
 	// Set STOP Condition to get the bus into a known state
 	return swi2c_stop(i2c);
 }
@@ -286,7 +283,7 @@ i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data)
 	}
 	
 	// Read ACK bit (0 = ACK, 1 = NACK)
-	if( (stat = master_rx_bit(i2c)) == 0x01) stat = I2C_ERR_NACK;
+	if( (stat = master_rx_bit(i2c)) == I2C_NACK) stat = I2C_ERR_NACK;
 	return stat;
 }
 
@@ -304,6 +301,22 @@ uint8_t swi2c_master_rx_byte(i2c_bus_t *i2c, bool ack)
 
 
 
+
+
+
+void swi2c_scan(i2c_bus_t *i2c)
+{
+	// Scan through all possible addresses
+	for(uint8_t indx = 0; indx < 128; indx++)
+	{
+		uint8_t addr = indx << 1;
+
+		swi2c_start(i2c);
+		if(swi2c_master_tx_byte(i2c, addr) == I2C_OK) 
+			printf("Device 0x%02X Reponded\n", addr);
+		swi2c_stop(i2c);
+	}
+}
 
 i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, 
      const uint8_t addr, const uint8_t reg, const uint8_t *data, uint16_t size)

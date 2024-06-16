@@ -5,7 +5,7 @@ Software I2C Library for the CH32Vxxx Family of MCUs
 This library supports:  
 * I2C Interface on ANY pins (Assuming no alternate purpose)
 * I2C Master Mode
-* Full Speed (TODO: MEASURE) Interface
+* (On CH32V003) 250KHz interface speed
 
 This library does not have any external dependencies - so can be used in
 conjunction with any of the Development Stacks / Libraries.
@@ -15,12 +15,7 @@ Copy the `lib_swi2c.c` and `lib_swi2c.h` files in your project and #include them
 
 
 ## TODO
-**-- Currently Active --**  
-* Scan bus for device responses 
-* Optimise code for instruction count & speed (250KHz max currently)
-* ^^ set mode needs tidying, and stripping back from GPIOCTRL spec
-
-**-- Medium Term --**
+* Optimise speed by cleaning up function calls
 * Better documentation & how to use
 * Add speed limiting code to keep interface in spec
 
