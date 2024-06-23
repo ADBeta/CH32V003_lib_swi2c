@@ -96,10 +96,10 @@ static inline void gpio_digital_write(const gpio_pin_t pin, const gpio_state_t s
 	// Make array of uint8_t from [pin] enum. See definition for details
 	uint8_t *byte = (uint8_t *)&pin;
 
-	if(state == GPIO_HIGH)
-		gpio_port_reg[ byte[0] ]->OUTDR |=  (0x01 << byte[1]);
-	if(state == GPIO_LOW)
-		gpio_port_reg[ byte[0] ]->OUTDR &= ~(0x01 << byte[1]);
+	uint32_t mask = 0x01 << byte[1];          // Shift by pin number
+	if(state == GPIO_LOW) mask = mask << 16;  // Shift by 16 if LOW, to Reset
+
+	gpio_port_reg[ byte[0] ]->BSHR = mask;
 }
 
 /// @breif Reads the INDR Register of the specified pin and returns state
@@ -169,7 +169,7 @@ static i2c_err_t clk_stretch(const gpio_pin_t scl)
 	return I2C_OK;
 }
 
-static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
+static i2c_err_t master_tx_bit(const i2c_device_t *i2c, const bool bit)
 {
 	// Set the Data line depending on bit
 	if(bit)
@@ -191,7 +191,7 @@ static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
 	return stat;
 }
 
-static bool master_rx_bit(const i2c_bus_t *i2c)
+static bool master_rx_bit(const i2c_device_t *i2c)
 {
 	bool bit = 0;
 	// Release the SDA pin so the slave can set data, then release SCL
@@ -210,7 +210,7 @@ static bool master_rx_bit(const i2c_bus_t *i2c)
 }
 
 /*** Library Functions *******************************************************/
-i2c_err_t swi2c_init(i2c_bus_t *i2c)
+i2c_err_t swi2c_init(i2c_device_t *i2c)
 {
 	// Set the Output register to LOW (Pulldown in output)
 	gpio_digital_write(i2c->pin_scl, GPIO_LOW);
@@ -224,7 +224,7 @@ i2c_err_t swi2c_init(i2c_bus_t *i2c)
 }
 
 
-i2c_err_t swi2c_start(i2c_bus_t *i2c)
+i2c_err_t swi2c_start(i2c_device_t *i2c)
 {
 	// START Condition is SDA Going LOW while SCL is HIGH
 	i2c_err_t stat = I2C_OK;
@@ -248,7 +248,7 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
 }
 
 
-i2c_err_t swi2c_stop(i2c_bus_t *i2c)
+i2c_err_t swi2c_stop(i2c_device_t *i2c)
 {
 	// Stop condition is defined by SDA going HIGH while SCL is HIGH
 	i2c_err_t stat = I2C_OK;
@@ -270,7 +270,7 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 	return stat;
 }
 
-i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data)
+i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data)
 {
 	i2c_err_t stat = I2C_OK;
 
@@ -287,7 +287,7 @@ i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data)
 	return stat;
 }
 
-uint8_t swi2c_master_rx_byte(i2c_bus_t *i2c, bool ack)
+uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack)
 {
 	// Read bits MSB First
 	uint8_t index = 8;
@@ -302,9 +302,8 @@ uint8_t swi2c_master_rx_byte(i2c_bus_t *i2c, bool ack)
 
 
 
-
-
-void swi2c_scan(i2c_bus_t *i2c)
+/*** I2C Device High Level Functions *****************************************/
+void swi2c_scan(i2c_device_t *i2c)
 {
 	// Scan through all possible addresses
 	for(uint8_t indx = 0; indx < 128; indx++)
@@ -314,22 +313,23 @@ void swi2c_scan(i2c_bus_t *i2c)
 		swi2c_start(i2c);
 		if(swi2c_master_tx_byte(i2c, addr) == I2C_OK) 
 			printf("Device 0x%02X Reponded\n", addr);
+
 		swi2c_stop(i2c);
 	}
 }
 
-i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, 
-     const uint8_t addr, const uint8_t reg, const uint8_t *data, uint16_t size)
+
+i2c_err_t swi2c_master_transmit(i2c_device_t *i2c, 
+                         const uint8_t reg, const uint8_t *data, uint16_t size)
 {
 	// Catch any bad inputs
 	if(i2c == NULL || data == NULL || size == 0) return I2C_ERR_INVALID_ARGS;
 
 	i2c_err_t stat = I2C_OK;
-
 	// Gaurd each step from failure
 	// Send START Condition and address byte
 	if( (stat = swi2c_start(i2c)) == I2C_OK && 
-		(stat = swi2c_master_tx_byte(i2c, addr)) == I2C_OK)
+		(stat = swi2c_master_tx_byte(i2c, i2c->address)) == I2C_OK)
 	{
 		swi2c_master_tx_byte(i2c, reg);
 		while(size)
@@ -344,8 +344,9 @@ i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c,
 	return stat;
 }
 
-i2c_err_t swi2c_master_receive(i2c_bus_t *i2c, 
-           const uint8_t addr, const uint8_t reg, uint8_t *data, uint16_t size)
+
+i2c_err_t swi2c_master_receive(i2c_device_t *i2c, 
+                               const uint8_t reg, uint8_t *data, uint16_t size)
 {
 	// Catch any bad inputs
 	if(i2c == NULL || data == NULL || size == 0) return I2C_ERR_INVALID_ARGS;
@@ -355,7 +356,7 @@ i2c_err_t swi2c_master_receive(i2c_bus_t *i2c,
 	// Gaurd each step from failure
 	// Send START Condition and address byte
 	if( (stat = swi2c_start(i2c)) == I2C_OK && 
-		(stat = swi2c_master_tx_byte(i2c, addr)) == I2C_OK)
+		(stat = swi2c_master_tx_byte(i2c, i2c->address)) == I2C_OK)
 	{
 		// Sed the Register Byte
 		swi2c_master_tx_byte(i2c, reg);
@@ -363,7 +364,7 @@ i2c_err_t swi2c_master_receive(i2c_bus_t *i2c,
 		// Repeat the START Condition
 		swi2c_start(i2c);
 		// Send address in Read Mode
-		swi2c_master_tx_byte(i2c, addr | 0x01);
+		swi2c_master_tx_byte(i2c, i2c->address | 0x01);
 
 		while(--size >= 1)
 		{

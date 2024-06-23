@@ -11,9 +11,11 @@
 
 #include "lib_swi2c.h"
 
-i2c_bus_t bus = {
+i2c_device_t dev = {
 	.pin_scl = GPIO_PC3,
-	.pin_sda = GPIO_PC4
+	.pin_sda = GPIO_PC4,
+
+	.address = 0xD0,
 };
 
 uint8_t data[12];
@@ -22,10 +24,10 @@ int main()
 {
 	SystemInit();
 
-	swi2c_init(&bus);
-	swi2c_scan(&bus);
+	swi2c_init(&dev);
+	swi2c_scan(&dev);
 	while (1)
 	{
-		swi2c_master_receive(&bus, 0xD0, 0x3B, data, 12);
+		swi2c_master_receive(&dev, 0x3B, data, 12);
 	}
 }

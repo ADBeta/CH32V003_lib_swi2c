@@ -238,7 +238,7 @@ Disassembly of section .text:
  27c:	0ff57713          	zext.b	a4,a0
  280:	6785                	lui	a5,0x1
  282:	070a                	slli	a4,a4,0x2
- 284:	cd078793          	addi	a5,a5,-816 # cd0 <gpio_port_reg>
+ 284:	ccc78793          	addi	a5,a5,-820 # ccc <gpio_port_reg>
  288:	97ba                	add	a5,a5,a4
  28a:	8121                	srli	a0,a0,0x8
  28c:	4705                	li	a4,1
@@ -271,7 +271,7 @@ static i2c_err_t clk_stretch(const gpio_pin_t scl)
  2aa:	8082                	ret
 
 000002ac <master_rx_bit.constprop.0>:
-static bool master_rx_bit(const i2c_bus_t *i2c)
+static bool master_rx_bit(const i2c_device_t *i2c)
 {
 	bool bit = 0;
 	// Release the SDA pin so the slave can set data, then release SCL
@@ -279,17 +279,17 @@ static bool master_rx_bit(const i2c_bus_t *i2c)
 	RELEASE_SDA;
  2ac:	200002b7          	lui	t0,0x20000
  2b0:	00028293          	mv	t0,t0
- 2b4:	0042a783          	lw	a5,4(t0) # 20000004 <bus+0x4>
+ 2b4:	0042a783          	lw	a5,4(t0) # 20000004 <dev+0x4>
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  2b8:	40021337          	lui	t1,0x40021
- 2bc:	01832583          	lw	a1,24(t1) # 40021018 <__global_pointer$+0x20020808>
+ 2bc:	01832583          	lw	a1,24(t1) # 40021018 <__global_pointer$+0x20020800>
  2c0:	4711                	li	a4,4
  2c2:	00f71633          	sll	a2,a4,a5
-static bool master_rx_bit(const i2c_bus_t *i2c)
+static bool master_rx_bit(const i2c_device_t *i2c)
  2c6:	1111                	addi	sp,sp,-28
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  2c8:	8e4d                	or	a2,a2,a1
-static bool master_rx_bit(const i2c_bus_t *i2c)
+static bool master_rx_bit(const i2c_device_t *i2c)
  2ca:	ca22                	sw	s0,20(sp)
  2cc:	c826                	sw	s1,16(sp)
  2ce:	cc06                	sw	ra,24(sp)
@@ -299,7 +299,7 @@ static bool master_rx_bit(const i2c_bus_t *i2c)
  2d8:	0ff7f693          	zext.b	a3,a5
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
  2dc:	6605                	lui	a2,0x1
- 2de:	cd060613          	addi	a2,a2,-816 # cd0 <gpio_port_reg>
+ 2de:	ccc60613          	addi	a2,a2,-820 # ccc <gpio_port_reg>
  2e2:	068a                	slli	a3,a3,0x2
  2e4:	96b2                	add	a3,a3,a2
  2e6:	428c                	lw	a1,0(a3)
@@ -405,7 +405,7 @@ static bool master_rx_bit(const i2c_bus_t *i2c)
 }
 
 
-i2c_err_t swi2c_start(i2c_bus_t *i2c)
+i2c_err_t swi2c_start(i2c_device_t *i2c)
  3ae:	1151                	addi	sp,sp,-12
  3b0:	c222                	sw	s0,4(sp)
 	i2c_err_t stat = I2C_OK;
@@ -417,23 +417,23 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
  3b2:	20000437          	lui	s0,0x20000
  3b6:	00040593          	mv	a1,s0
  3ba:	41d4                	lw	a3,4(a1)
-i2c_err_t swi2c_start(i2c_bus_t *i2c)
+i2c_err_t swi2c_start(i2c_device_t *i2c)
  3bc:	c026                	sw	s1,0(sp)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
  3be:	6485                	lui	s1,0x1
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  3c0:	0ff6f713          	zext.b	a4,a3
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 3c4:	cd048793          	addi	a5,s1,-816 # cd0 <gpio_port_reg>
+ 3c4:	ccc48793          	addi	a5,s1,-820 # ccc <gpio_port_reg>
  3c8:	00271613          	slli	a2,a4,0x2
  3cc:	97b2                	add	a5,a5,a2
  3ce:	4390                	lw	a2,0(a5)
 	if(i2c->_active)
- 3d0:	00c5c783          	lbu	a5,12(a1)
-i2c_err_t swi2c_start(i2c_bus_t *i2c)
+ 3d0:	0105c783          	lbu	a5,16(a1)
+i2c_err_t swi2c_start(i2c_device_t *i2c)
  3d4:	c406                	sw	ra,8(sp)
  3d6:	00040413          	mv	s0,s0
- 3da:	cd048493          	addi	s1,s1,-816
+ 3da:	ccc48493          	addi	s1,s1,-820
 	if(i2c->_active)
  3de:	efc9                	bnez	a5,478 <swi2c_start.constprop.0+0xca>
 		RELEASE_SCL;    // SCL HIGH
@@ -479,7 +479,7 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
 	ASSERT_SCL;        // SCL LOW
  42a:	401c                	lw	a5,0(s0)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 42c:	0185a303          	lw	t1,24(a1) # 40021018 <__global_pointer$+0x20020808>
+ 42c:	0185a303          	lw	t1,24(a1) # 40021018 <__global_pointer$+0x20020800>
  430:	00f61633          	sll	a2,a2,a5
  434:	00666633          	or	a2,a2,t1
  438:	0ff7f513          	zext.b	a0,a5
@@ -508,7 +508,7 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
  466:	8fd9                	or	a5,a5,a4
  468:	c21c                	sw	a5,0(a2)
 	i2c->_active = true;
- 46a:	00d40623          	sb	a3,12(s0) # 2000000c <bus+0xc>
+ 46a:	00d40823          	sb	a3,16(s0) # 20000010 <dev+0x10>
 }
  46e:	40a2                	lw	ra,8(sp)
  470:	4412                	lw	s0,4(sp)
@@ -541,7 +541,7 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
  4b0:	c214                	sw	a3,0(a2)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 4b2:	0185a303          	lw	t1,24(a1) # 40021018 <__global_pointer$+0x20020808>
+ 4b2:	0185a303          	lw	t1,24(a1) # 40021018 <__global_pointer$+0x20020800>
  4b6:	0ff57693          	zext.b	a3,a0
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
  4ba:	068a                	slli	a3,a3,0x2
@@ -574,7 +574,7 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
 
 000004f6 <internal_handle_input.constprop.0>:
  4f6:	e00007b7          	lui	a5,0xe0000
- 4fa:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8e4>
+ 4fa:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8dc>
  4fe:	439c                	lw	a5,0(a5)
  500:	8082                	ret
 
@@ -588,7 +588,7 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
  50e:	842e                	mv	s0,a1
  510:	e1f9                	bnez	a1,5d6 <_write.constprop.0+0xd4>
  512:	e00007b7          	lui	a5,0xe0000
- 516:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8e4>
+ 516:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8dc>
  51a:	439c                	lw	a5,0(a5)
  51c:	c789                	beqz	a5,526 <_write.constprop.0+0x24>
  51e:	0807f793          	andi	a5,a5,128
@@ -606,7 +606,7 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
  53a:	00d65363          	bge	a2,a3,540 <_write.constprop.0+0x3e>
  53e:	471d                	li	a4,7
  540:	00027637          	lui	a2,0x27
- 544:	10160613          	addi	a2,a2,257 # 27101 <lib_swi2c.c.1c0fad7c+0x24968>
+ 544:	10160613          	addi	a2,a2,257 # 27101 <lib_swi2c.c.56ead7c2+0x24966>
  548:	00032583          	lw	a1,0(t1)
  54c:	0805f513          	andi	a0,a1,128
  550:	ed3d                	bnez	a0,5ce <_write.constprop.0+0xcc>
@@ -634,7 +634,7 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
  582:	e00006b7          	lui	a3,0xe0000
  586:	4322                	lw	t1,8(sp)
  588:	4712                	lw	a4,4(sp)
- 58a:	0f868693          	addi	a3,a3,248 # e00000f8 <__global_pointer$+0xbffff8e8>
+ 58a:	0f868693          	addi	a3,a3,248 # e00000f8 <__global_pointer$+0xbffff8e0>
  58e:	c290                	sw	a2,0(a3)
  590:	458d                	li	a1,3
  592:	00978633          	add	a2,a5,s1
@@ -661,7 +661,7 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
  5d4:	bf89                	j	526 <_write.constprop.0+0x24>
  5d6:	e0000337          	lui	t1,0xe0000
  5da:	4481                	li	s1,0
- 5dc:	0f430313          	addi	t1,t1,244 # e00000f4 <__global_pointer$+0xbffff8e4>
+ 5dc:	0f430313          	addi	t1,t1,244 # e00000f4 <__global_pointer$+0xbffff8dc>
  5e0:	b7e5                	j	5c8 <_write.constprop.0+0xc6>
 
 000005e2 <__puts_uart>:
@@ -687,13 +687,13 @@ i2c_err_t swi2c_start(i2c_bus_t *i2c)
  602:	4311                	li	t1,4
  604:	0ff7f693          	zext.b	a3,a5
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 608:	cd060713          	addi	a4,a2,-816 # cd0 <gpio_port_reg>
+ 608:	ccc60713          	addi	a4,a2,-820 # ccc <gpio_port_reg>
  60c:	068a                	slli	a3,a3,0x2
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  60e:	00f313b3          	sll	t2,t1,a5
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
  612:	8399                	srli	a5,a5,0x6
-static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
+static i2c_err_t master_tx_bit(const i2c_device_t *i2c, const bool bit)
  614:	1121                	addi	sp,sp,-24
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
  616:	9736                	add	a4,a4,a3
@@ -701,7 +701,7 @@ static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
  61c:	46bd                	li	a3,15
  61e:	00f696b3          	sll	a3,a3,a5
  622:	400215b7          	lui	a1,0x40021
-static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
+static i2c_err_t master_tx_bit(const i2c_device_t *i2c, const bool bit)
  626:	ca06                	sw	ra,20(sp)
  628:	c822                	sw	s0,16(sp)
  62a:	c626                	sw	s1,12(sp)
@@ -709,8 +709,8 @@ static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
  62c:	4318                	lw	a4,0(a4)
  62e:	fff6c693          	not	a3,a3
  632:	00028293          	mv	t0,t0
- 636:	cd060613          	addi	a2,a2,-816
- 63a:	05e1                	addi	a1,a1,24 # 40021018 <__global_pointer$+0x20020808>
+ 636:	ccc60613          	addi	a2,a2,-820
+ 63a:	05e1                	addi	a1,a1,24 # 40021018 <__global_pointer$+0x20020800>
 	if(bit)
  63c:	cd59                	beqz	a0,6da <master_tx_bit.constprop.0.isra.0+0xe4>
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
@@ -730,7 +730,7 @@ static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
  656:	00d36333          	or	t1,t1,a3
  65a:	00672023          	sw	t1,0(a4)
 	RELEASE_SCL;   // SCL HIGH
- 65e:	0002a503          	lw	a0,0(t0) # 20000000 <bus>
+ 65e:	0002a503          	lw	a0,0(t0) # 20000000 <dev>
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  662:	400217b7          	lui	a5,0x40021
  666:	4f8c                	lw	a1,24(a5)
@@ -757,7 +757,7 @@ static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
  69c:	400c                	lw	a1,0(s0)
  69e:	00c696b3          	sll	a3,a3,a2
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 6a2:	07e1                	addi	a5,a5,24 # 40021018 <__global_pointer$+0x20020808>
+ 6a2:	07e1                	addi	a5,a5,24 # 40021018 <__global_pointer$+0x20020800>
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
  6a4:	8ecd                	or	a3,a3,a1
  6a6:	c014                	sw	a3,0(s0)
@@ -819,7 +819,7 @@ static i2c_err_t master_tx_bit(const i2c_bus_t *i2c, const bool bit)
 	return stat;
 }
 
-i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data)
+i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data)
  6fa:	1151                	addi	sp,sp,-12
  6fc:	c222                	sw	s0,4(sp)
  6fe:	c026                	sw	s1,0(sp)
@@ -863,14 +863,14 @@ i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data)
 00000728 <swi2c_stop.constprop.0.isra.0>:
 	ASSERT_SDA;     // SDA LOW 
  728:	200002b7          	lui	t0,0x20000
-i2c_err_t swi2c_stop(i2c_bus_t *i2c)
+i2c_err_t swi2c_stop(i2c_device_t *i2c)
  72c:	1121                	addi	sp,sp,-24
 	ASSERT_SDA;     // SDA LOW 
  72e:	00028293          	mv	t0,t0
-i2c_err_t swi2c_stop(i2c_bus_t *i2c)
+i2c_err_t swi2c_stop(i2c_device_t *i2c)
  732:	c822                	sw	s0,16(sp)
 	ASSERT_SDA;     // SDA LOW 
- 734:	0042a403          	lw	s0,4(t0) # 20000004 <bus+0x4>
+ 734:	0042a403          	lw	s0,4(t0) # 20000004 <dev+0x4>
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  738:	40021737          	lui	a4,0x40021
  73c:	4f10                	lw	a2,24(a4)
@@ -880,19 +880,19 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  744:	4791                	li	a5,4
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 746:	cd030313          	addi	t1,t1,-816 # cd0 <gpio_port_reg>
+ 746:	ccc30313          	addi	t1,t1,-820 # ccc <gpio_port_reg>
  74a:	068a                	slli	a3,a3,0x2
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  74c:	008795b3          	sll	a1,a5,s0
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
  750:	969a                	add	a3,a3,t1
-i2c_err_t swi2c_stop(i2c_bus_t *i2c)
+i2c_err_t swi2c_stop(i2c_device_t *i2c)
  752:	c626                	sw	s1,12(sp)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  754:	8e4d                	or	a2,a2,a1
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
  756:	4284                	lw	s1,0(a3)
-i2c_err_t swi2c_stop(i2c_bus_t *i2c)
+i2c_err_t swi2c_stop(i2c_device_t *i2c)
  758:	ca06                	sw	ra,20(sp)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
  75a:	c02e                	sw	a1,0(sp)
@@ -916,7 +916,7 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 	RELEASE_SCL;    // SCL HIGH
  788:	0002a503          	lw	a0,0(t0)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 78c:	01872083          	lw	ra,24(a4) # 40021018 <__global_pointer$+0x20020808>
+ 78c:	01872083          	lw	ra,24(a4) # 40021018 <__global_pointer$+0x20020800>
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
  790:	c432                	sw	a2,8(sp)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
@@ -979,7 +979,7 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 	i2c->_active = false;
  80a:	200007b7          	lui	a5,0x20000
  80e:	00078293          	mv	t0,a5
- 812:	00028623          	sb	zero,12(t0)
+ 812:	00028823          	sb	zero,16(t0)
 }
  816:	44b2                	lw	s1,12(sp)
  818:	0161                	addi	sp,sp,24
@@ -987,8 +987,8 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
 
 0000081c <handle_reset>:
  81c:	20000197          	auipc	gp,0x20000
- 820:	ff418193          	addi	gp,gp,-12 # 20000810 <__global_pointer$>
- 824:	ff018113          	addi	sp,gp,-16 # 20000800 <_eusrstack>
+ 820:	ffc18193          	addi	gp,gp,-4 # 20000818 <__global_pointer$>
+ 824:	fe818113          	addi	sp,gp,-24 # 20000800 <_eusrstack>
  828:	08000513          	li	a0,128
  82c:	30051073          	csrw	mstatus,a0
  830:	468d                	li	a3,3
@@ -997,19 +997,19 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
  83a:	8d55                	or	a0,a0,a3
  83c:	30551073          	csrw	mtvec,a0
  840:	1ffff517          	auipc	a0,0x1ffff
- 844:	7d050513          	addi	a0,a0,2000 # 20000010 <data>
- 848:	80c18593          	addi	a1,gp,-2036 # 2000001c <_ebss>
+ 844:	7d850513          	addi	a0,a0,2008 # 20000018 <data>
+ 848:	80c18593          	addi	a1,gp,-2036 # 20000024 <_ebss>
  84c:	4601                	li	a2,0
  84e:	00b55663          	bge	a0,a1,85a <handle_reset+0x3e>
  852:	c110                	sw	a2,0(a0)
  854:	0511                	addi	a0,a0,4
  856:	feb54ee3          	blt	a0,a1,852 <handle_reset+0x36>
  85a:	00000517          	auipc	a0,0x0
- 85e:	48650513          	addi	a0,a0,1158 # ce0 <_data_lma>
+ 85e:	48250513          	addi	a0,a0,1154 # cdc <_data_lma>
  862:	1ffff597          	auipc	a1,0x1ffff
- 866:	79e58593          	addi	a1,a1,1950 # 20000000 <bus>
+ 866:	79e58593          	addi	a1,a1,1950 # 20000000 <dev>
  86a:	1ffff617          	auipc	a2,0x1ffff
- 86e:	7a660613          	addi	a2,a2,1958 # 20000010 <data>
+ 86e:	7ae60613          	addi	a2,a2,1966 # 20000018 <data>
  872:	00c58863          	beq	a1,a2,882 <handle_reset+0x66>
  876:	4114                	lw	a3,0(a0)
  878:	c194                	sw	a3,0(a1)
@@ -1098,7 +1098,7 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
  940:	0786                	slli	a5,a5,0x1
  942:	97b2                	add	a5,a5,a2
  944:	4685                	li	a3,1
- 946:	fd070613          	addi	a2,a4,-48 # 40020fd0 <__global_pointer$+0x200207c0>
+ 946:	fd070613          	addi	a2,a4,-48 # 40020fd0 <__global_pointer$+0x200207b8>
  94a:	0ff67513          	zext.b	a0,a2
  94e:	fea5f3e3          	bgeu	a1,a0,934 <mini_vpprintf+0x7a>
  952:	c299                	beqz	a3,958 <mini_vpprintf+0x9e>
@@ -1253,8 +1253,8 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
  ace:	c398                	sw	a4,0(a5)
  ad0:	400217b7          	lui	a5,0x40021
  ad4:	01080737          	lui	a4,0x1080
- ad8:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x200207f4>
- adc:	08170713          	addi	a4,a4,129 # 1080081 <lib_swi2c.c.1c0fad7c+0x107d8e8>
+ ad8:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x200207ec>
+ adc:	08170713          	addi	a4,a4,129 # 1080081 <lib_swi2c.c.56ead7c2+0x107d8e6>
  ae0:	c398                	sw	a4,0(a5)
  ae2:	009f0737          	lui	a4,0x9f0
  ae6:	c798                	sw	a4,8(a5)
@@ -1272,10 +1272,10 @@ i2c_err_t swi2c_stop(i2c_bus_t *i2c)
  b08:	8bb1                	andi	a5,a5,12
  b0a:	fee79ee3          	bne	a5,a4,b06 <SystemInit+0x3e>
  b0e:	e00007b7          	lui	a5,0xe0000
- b12:	0f878793          	addi	a5,a5,248 # e00000f8 <__global_pointer$+0xbffff8e8>
+ b12:	0f878793          	addi	a5,a5,248 # e00000f8 <__global_pointer$+0xbffff8e0>
  b16:	0007a023          	sw	zero,0(a5)
  b1a:	e00007b7          	lui	a5,0xe0000
- b1e:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8e4>
+ b1e:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8dc>
  b22:	08000713          	li	a4,128
  b26:	c398                	sw	a4,0(a5)
  b28:	8082                	ret
@@ -1287,224 +1287,237 @@ uint8_t data[12];
 
 int main()
 {
- b2a:	1131                	addi	sp,sp,-20
- b2c:	c806                	sw	ra,16(sp)
- b2e:	c622                	sw	s0,12(sp)
- b30:	c426                	sw	s1,8(sp)
+ b2a:	1121                	addi	sp,sp,-24
+ b2c:	ca06                	sw	ra,20(sp)
+ b2e:	c822                	sw	s0,16(sp)
+ b30:	c626                	sw	s1,12(sp)
 	SystemInit();
  b32:	3f59                	jal	ac8 <SystemInit>
 	gpio_digital_write(i2c->pin_scl, GPIO_LOW);
- b34:	200006b7          	lui	a3,0x20000
- b38:	00068693          	mv	a3,a3
- b3c:	429c                	lw	a5,0(a3)
-		gpio_port_reg[ byte[0] ]->OUTDR &= ~(0x01 << byte[1]);
- b3e:	6605                	lui	a2,0x1
- b40:	cd060613          	addi	a2,a2,-816 # cd0 <gpio_port_reg>
- b44:	0ff7f593          	zext.b	a1,a5
- b48:	00259713          	slli	a4,a1,0x2
- b4c:	9732                	add	a4,a4,a2
- b4e:	4308                	lw	a0,0(a4)
- b50:	83a1                	srli	a5,a5,0x8
- b52:	4305                	li	t1,1
- b54:	00c52283          	lw	t0,12(a0)
- b58:	0ff7f713          	zext.b	a4,a5
- b5c:	00f317b3          	sll	a5,t1,a5
- b60:	fff7c793          	not	a5,a5
- b64:	0057f7b3          	and	a5,a5,t0
- b68:	c55c                	sw	a5,12(a0)
+ b34:	200004b7          	lui	s1,0x20000
+ b38:	00048593          	mv	a1,s1
+ b3c:	4198                	lw	a4,0(a1)
+	gpio_port_reg[ byte[0] ]->BSHR = mask;
+ b3e:	6505                	lui	a0,0x1
+ b40:	ccc50513          	addi	a0,a0,-820 # ccc <gpio_port_reg>
+	uint32_t mask = 0x01 << byte[1];          // Shift by pin number
+ b44:	00875793          	srli	a5,a4,0x8
+	gpio_port_reg[ byte[0] ]->BSHR = mask;
+ b48:	0ff77713          	zext.b	a4,a4
+ b4c:	00271693          	slli	a3,a4,0x2
+ b50:	96aa                	add	a3,a3,a0
+ b52:	4294                	lw	a3,0(a3)
+	uint32_t mask = 0x01 << byte[1];          // Shift by pin number
+ b54:	4605                	li	a2,1
+ b56:	0ff7f293          	zext.b	t0,a5
+ b5a:	00f617b3          	sll	a5,a2,a5
+	if(state == GPIO_LOW) mask = mask << 16;  // Shift by 16 if LOW, to Reset
+ b5e:	07c2                	slli	a5,a5,0x10
+	gpio_port_reg[ byte[0] ]->BSHR = mask;
+ b60:	ca9c                	sw	a5,16(a3)
 	gpio_digital_write(i2c->pin_sda, GPIO_LOW);
- b6a:	42dc                	lw	a5,4(a3)
-		gpio_port_reg[ byte[0] ]->OUTDR &= ~(0x01 << byte[1]);
- b6c:	0ff7f693          	zext.b	a3,a5
- b70:	00269293          	slli	t0,a3,0x2
- b74:	9616                	add	a2,a2,t0
- b76:	4210                	lw	a2,0(a2)
- b78:	83a1                	srli	a5,a5,0x8
- b7a:	00f31333          	sll	t1,t1,a5
- b7e:	00c62383          	lw	t2,12(a2)
- b82:	fff34313          	not	t1,t1
- b86:	0ff7f293          	zext.b	t0,a5
- b8a:	00737333          	and	t1,t1,t2
- b8e:	00662623          	sw	t1,12(a2)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- b92:	40021337          	lui	t1,0x40021
- b96:	01832383          	lw	t2,24(t1) # 40021018 <__global_pointer$+0x20020808>
- b9a:	4791                	li	a5,4
- b9c:	00b795b3          	sll	a1,a5,a1
- ba0:	0075e5b3          	or	a1,a1,t2
- ba4:	0015e593          	ori	a1,a1,1
- ba8:	00b32c23          	sw	a1,24(t1)
+ b62:	41dc                	lw	a5,4(a1)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- bac:	4100                	lw	s0,0(a0)
- bae:	00271593          	slli	a1,a4,0x2
- bb2:	473d                	li	a4,15
- bb4:	00b713b3          	sll	t2,a4,a1
- bb8:	fff3c393          	not	t2,t2
- bbc:	0083f3b3          	and	t2,t2,s0
- bc0:	00752023          	sw	t2,0(a0)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- bc4:	00052383          	lw	t2,0(a0)
- bc8:	00b795b3          	sll	a1,a5,a1
+ b64:	028a                	slli	t0,t0,0x2
+	uint32_t mask = 0x01 << byte[1];          // Shift by pin number
+ b66:	0087d593          	srli	a1,a5,0x8
+ b6a:	00b61633          	sll	a2,a2,a1
+	gpio_port_reg[ byte[0] ]->BSHR = mask;
+ b6e:	0ff7f793          	zext.b	a5,a5
+	uint32_t mask = 0x01 << byte[1];          // Shift by pin number
+ b72:	0ff5f313          	zext.b	t1,a1
+	if(state == GPIO_LOW) mask = mask << 16;  // Shift by 16 if LOW, to Reset
+ b76:	01061593          	slli	a1,a2,0x10
+	gpio_port_reg[ byte[0] ]->BSHR = mask;
+ b7a:	00279613          	slli	a2,a5,0x2
+ b7e:	9532                	add	a0,a0,a2
+ b80:	4110                	lw	a2,0(a0)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- bcc:	00d796b3          	sll	a3,a5,a3
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- bd0:	0075e5b3          	or	a1,a1,t2
- bd4:	c10c                	sw	a1,0(a0)
+ b82:	40021537          	lui	a0,0x40021
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ b86:	030a                	slli	t1,t1,0x2
+	gpio_port_reg[ byte[0] ]->BSHR = mask;
+ b88:	ca0c                	sw	a1,16(a2)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- bd6:	01832583          	lw	a1,24(t1)
+ b8a:	01852383          	lw	t2,24(a0) # 40021018 <__global_pointer$+0x20020800>
+ b8e:	4591                	li	a1,4
+ b90:	00e59733          	sll	a4,a1,a4
+ b94:	00776733          	or	a4,a4,t2
+ b98:	00176713          	ori	a4,a4,1
+ b9c:	cd18                	sw	a4,24(a0)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- bda:	028a                	slli	t0,t0,0x2
- bdc:	00571733          	sll	a4,a4,t0
+ b9e:	4280                	lw	s0,0(a3)
+ ba0:	473d                	li	a4,15
+ ba2:	005713b3          	sll	t2,a4,t0
+ ba6:	fff3c393          	not	t2,t2
+ baa:	0083f3b3          	and	t2,t2,s0
+ bae:	0076a023          	sw	t2,0(a3) # 40021000 <__global_pointer$+0x200207e8>
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ bb2:	0006a383          	lw	t2,0(a3)
+ bb6:	005592b3          	sll	t0,a1,t0
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ bba:	00671733          	sll	a4,a4,t1
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ bbe:	0072e2b3          	or	t0,t0,t2
+ bc2:	0056a023          	sw	t0,0(a3)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- be0:	8ecd                	or	a3,a3,a1
- be2:	0016e693          	ori	a3,a3,1
- be6:	00d32c23          	sw	a3,24(t1)
+ bc6:	01852283          	lw	t0,24(a0)
+ bca:	00f596b3          	sll	a3,a1,a5
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- bea:	4214                	lw	a3,0(a2)
- bec:	fff74713          	not	a4,a4
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- bf0:	005797b3          	sll	a5,a5,t0
+ bce:	fff74713          	not	a4,a4
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ bd2:	0056e6b3          	or	a3,a3,t0
+ bd6:	0016e693          	ori	a3,a3,1
+ bda:	cd14                	sw	a3,24(a0)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- bf4:	8f75                	and	a4,a4,a3
- bf6:	c218                	sw	a4,0(a2)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- bf8:	4218                	lw	a4,0(a2)
+ bdc:	421c                	lw	a5,0(a2)
 
-
-void swi2c_scan(i2c_bus_t *i2c)
+/*** I2C Device High Level Functions *****************************************/
+void swi2c_scan(i2c_device_t *i2c)
 {
 	// Scan through all possible addresses
 	for(uint8_t indx = 0; indx < 128; indx++)
- bfa:	4401                	li	s0,0
+ bde:	4401                	li	s0,0
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ be0:	8f7d                	and	a4,a4,a5
+ be2:	c218                	sw	a4,0(a2)
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- bfc:	8fd9                	or	a5,a5,a4
- bfe:	c21c                	sw	a5,0(a2)
+ be4:	4218                	lw	a4,0(a2)
+ be6:	006597b3          	sll	a5,a1,t1
+ bea:	8fd9                	or	a5,a5,a4
+ bec:	c21c                	sw	a5,0(a2)
 	return swi2c_stop(i2c);
- c00:	3625                	jal	728 <swi2c_stop.constprop.0.isra.0>
+ bee:	3e2d                	jal	728 <swi2c_stop.constprop.0.isra.0>
 
-	swi2c_init(&bus);
-	swi2c_scan(&bus);
- c02:	00141493          	slli	s1,s0,0x1
- c06:	0ff4f493          	zext.b	s1,s1
+	swi2c_init(&dev);
+	swi2c_scan(&dev);
+ bf0:	00048793          	mv	a5,s1
+ bf4:	c03e                	sw	a5,0(sp)
+ bf6:	00141493          	slli	s1,s0,0x1
+ bfa:	0ff4f493          	zext.b	s1,s1
 	{
 		uint8_t addr = indx << 1;
 
 		swi2c_start(i2c);
- c0a:	fa4ff0ef          	jal	3ae <swi2c_start.constprop.0>
+ bfe:	fb0ff0ef          	jal	3ae <swi2c_start.constprop.0>
 		if(swi2c_master_tx_byte(i2c, addr) == I2C_OK) 
- c0e:	8526                	mv	a0,s1
- c10:	34ed                	jal	6fa <swi2c_master_tx_byte.constprop.0>
- c12:	e511                	bnez	a0,c1e <main+0xf4>
+ c02:	8526                	mv	a0,s1
+ c04:	3cdd                	jal	6fa <swi2c_master_tx_byte.constprop.0>
+ c06:	e511                	bnez	a0,c12 <main+0xe8>
 			printf("Device 0x%02X Reponded\n", addr);
- c14:	6785                	lui	a5,0x1
- c16:	85a6                	mv	a1,s1
- c18:	cb878513          	addi	a0,a5,-840 # cb8 <main+0x18e>
- c1c:	3da1                	jal	a74 <printf>
+ c08:	6785                	lui	a5,0x1
+ c0a:	85a6                	mv	a1,s1
+ c0c:	cb478513          	addi	a0,a5,-844 # cb4 <main+0x18a>
+ c10:	3595                	jal	a74 <printf>
+
 		swi2c_stop(i2c);
- c1e:	3629                	jal	728 <swi2c_stop.constprop.0.isra.0>
+ c12:	3e19                	jal	728 <swi2c_stop.constprop.0.isra.0>
 	for(uint8_t indx = 0; indx < 128; indx++)
- c20:	0405                	addi	s0,s0,1
- c22:	0ff47413          	zext.b	s0,s0
- c26:	08000793          	li	a5,128
- c2a:	fcf41ce3          	bne	s0,a5,c02 <main+0xd8>
+ c14:	0405                	addi	s0,s0,1
+ c16:	0ff47413          	zext.b	s0,s0
+ c1a:	08000793          	li	a5,128
+ c1e:	fcf41ce3          	bne	s0,a5,bf6 <main+0xcc>
 
 	i2c_err_t stat = I2C_OK;
 
 	// Gaurd each step from failure
 	// Send START Condition and address byte
 	if( (stat = swi2c_start(i2c)) == I2C_OK && 
- c2e:	f80ff0ef          	jal	3ae <swi2c_start.constprop.0>
- c32:	e149                	bnez	a0,cb4 <main+0x18a>
-		(stat = swi2c_master_tx_byte(i2c, addr)) == I2C_OK)
- c34:	0d000513          	li	a0,208
- c38:	34c9                	jal	6fa <swi2c_master_tx_byte.constprop.0>
+ c22:	f8cff0ef          	jal	3ae <swi2c_start.constprop.0>
+ c26:	e549                	bnez	a0,cb0 <main+0x186>
+		(stat = swi2c_master_tx_byte(i2c, i2c->address)) == I2C_OK)
+ c28:	4782                	lw	a5,0(sp)
+ c2a:	0087c503          	lbu	a0,8(a5)
+ c2e:	34f1                	jal	6fa <swi2c_master_tx_byte.constprop.0>
 	if( (stat = swi2c_start(i2c)) == I2C_OK && 
- c3a:	ed2d                	bnez	a0,cb4 <main+0x18a>
+ c30:	e141                	bnez	a0,cb0 <main+0x186>
 	{
 		// Sed the Register Byte
 		swi2c_master_tx_byte(i2c, reg);
- c3c:	03b00513          	li	a0,59
- c40:	3c6d                	jal	6fa <swi2c_master_tx_byte.constprop.0>
+ c32:	03b00513          	li	a0,59
+ c36:	34d1                	jal	6fa <swi2c_master_tx_byte.constprop.0>
 
 		// Repeat the START Condition
 		swi2c_start(i2c);
- c42:	f6cff0ef          	jal	3ae <swi2c_start.constprop.0>
+ c38:	f76ff0ef          	jal	3ae <swi2c_start.constprop.0>
 		// Send address in Read Mode
-		swi2c_master_tx_byte(i2c, addr | 0x01);
- c46:	0d100513          	li	a0,209
- c4a:	3c45                	jal	6fa <swi2c_master_tx_byte.constprop.0>
- c4c:	200007b7          	lui	a5,0x20000
- c50:	01078713          	addi	a4,a5,16 # 20000010 <data>
+		swi2c_master_tx_byte(i2c, i2c->address | 0x01);
+ c3c:	4782                	lw	a5,0(sp)
+ c3e:	0087c503          	lbu	a0,8(a5)
+ c42:	00156513          	ori	a0,a0,1
+ c46:	3c55                	jal	6fa <swi2c_master_tx_byte.constprop.0>
+ c48:	200007b7          	lui	a5,0x20000
+ c4c:	01878713          	addi	a4,a5,24 # 20000018 <data>
 
 		while(--size >= 1)
- c54:	80b18793          	addi	a5,gp,-2037 # 2000001b <data+0xb>
- c58:	c03e                	sw	a5,0(sp)
+ c50:	80b18793          	addi	a5,gp,-2037 # 20000023 <data+0xb>
+ c54:	c23e                	sw	a5,4(sp)
 	for(uint8_t indx = 0; indx < 128; indx++)
- c5a:	4421                	li	s0,8
+ c56:	4421                	li	s0,8
 	uint8_t byte = 0x00;
- c5c:	4481                	li	s1,0
- c5e:	c23a                	sw	a4,4(sp)
+ c58:	4481                	li	s1,0
+ c5a:	c43a                	sw	a4,8(sp)
 	while(index--) byte = (byte << 1) | master_rx_bit(i2c);
- c60:	e4cff0ef          	jal	2ac <master_rx_bit.constprop.0>
- c64:	00149793          	slli	a5,s1,0x1
- c68:	147d                	addi	s0,s0,-1
- c6a:	8fc9                	or	a5,a5,a0
- c6c:	0ff47413          	zext.b	s0,s0
- c70:	4712                	lw	a4,4(sp)
- c72:	0ff7f493          	zext.b	s1,a5
- c76:	f465                	bnez	s0,c5e <main+0x134>
+ c5c:	e50ff0ef          	jal	2ac <master_rx_bit.constprop.0>
+ c60:	00149793          	slli	a5,s1,0x1
+ c64:	147d                	addi	s0,s0,-1
+ c66:	8fc9                	or	a5,a5,a0
+ c68:	0ff47413          	zext.b	s0,s0
+ c6c:	4722                	lw	a4,8(sp)
+ c6e:	0ff7f493          	zext.b	s1,a5
+ c72:	f465                	bnez	s0,c5a <main+0x130>
 	master_tx_bit(i2c, ack);
- c78:	4501                	li	a0,0
- c7a:	3ab5                	jal	5f6 <master_tx_bit.constprop.0.isra.0>
+ c74:	4501                	li	a0,0
+ c76:	3241                	jal	5f6 <master_tx_bit.constprop.0.isra.0>
 		{
 			*data = swi2c_master_rx_byte(i2c, I2C_ACK);
- c7c:	4712                	lw	a4,4(sp)
+ c78:	4722                	lw	a4,8(sp)
 		while(--size >= 1)
- c7e:	4782                	lw	a5,0(sp)
+ c7a:	4792                	lw	a5,4(sp)
 			*data = swi2c_master_rx_byte(i2c, I2C_ACK);
- c80:	00970023          	sb	s1,0(a4) # 40021000 <__global_pointer$+0x200207f0>
+ c7c:	00970023          	sb	s1,0(a4) # 40021000 <__global_pointer$+0x200207e8>
 			++data;
- c84:	0705                	addi	a4,a4,1
+ c80:	0705                	addi	a4,a4,1
 		while(--size >= 1)
- c86:	fcf71ae3          	bne	a4,a5,c5a <main+0x130>
- c8a:	47a1                	li	a5,8
- c8c:	c03e                	sw	a5,0(sp)
+ c82:	fcf71ae3          	bne	a4,a5,c56 <main+0x12c>
+ c86:	47a1                	li	a5,8
+ c88:	c23e                	sw	a5,4(sp)
 	while(index--) byte = (byte << 1) | master_rx_bit(i2c);
- c8e:	e1eff0ef          	jal	2ac <master_rx_bit.constprop.0>
- c92:	4782                	lw	a5,0(sp)
- c94:	0406                	slli	s0,s0,0x1
- c96:	8c49                	or	s0,s0,a0
- c98:	17fd                	addi	a5,a5,-1
- c9a:	0ff7f793          	zext.b	a5,a5
- c9e:	0ff47413          	zext.b	s0,s0
- ca2:	f7ed                	bnez	a5,c8c <main+0x162>
+ c8a:	e22ff0ef          	jal	2ac <master_rx_bit.constprop.0>
+ c8e:	4792                	lw	a5,4(sp)
+ c90:	0406                	slli	s0,s0,0x1
+ c92:	8c49                	or	s0,s0,a0
+ c94:	17fd                	addi	a5,a5,-1
+ c96:	0ff7f793          	zext.b	a5,a5
+ c9a:	0ff47413          	zext.b	s0,s0
+ c9e:	f7ed                	bnez	a5,c88 <main+0x15e>
 	master_tx_bit(i2c, ack);
- ca4:	4505                	li	a0,1
- ca6:	3a81                	jal	5f6 <master_tx_bit.constprop.0.isra.0>
+ ca0:	4505                	li	a0,1
+ ca2:	3a91                	jal	5f6 <master_tx_bit.constprop.0.isra.0>
 		}
 
 		// Last byte read has NACK bit set
 		*data = swi2c_master_rx_byte(i2c, I2C_NACK);
- ca8:	200007b7          	lui	a5,0x20000
- cac:	01078793          	addi	a5,a5,16 # 20000010 <data>
- cb0:	008785a3          	sb	s0,11(a5)
+ ca4:	200007b7          	lui	a5,0x20000
+ ca8:	01878793          	addi	a5,a5,24 # 20000018 <data>
+ cac:	008785a3          	sb	s0,11(a5)
 	}
 
 	swi2c_stop(i2c);
- cb4:	3c95                	jal	728 <swi2c_stop.constprop.0.isra.0>
+ cb0:	3ca5                	jal	728 <swi2c_stop.constprop.0.isra.0>
 	while (1)
- cb6:	bfa5                	j	c2e <main+0x104>
- cb8:	6544                	.insn	2, 0x6544
- cba:	6976                	.insn	2, 0x6976
- cbc:	30206563          	bltu	zero,sp,fc6 <_data_lma+0x2e6>
- cc0:	2578                	.insn	2, 0x2578
- cc2:	3230                	.insn	2, 0x3230
- cc4:	2058                	.insn	2, 0x2058
- cc6:	6552                	.insn	2, 0x6552
- cc8:	6f70                	.insn	2, 0x6f70
- cca:	646e                	.insn	2, 0x646e
- ccc:	6465                	lui	s0,0x19
- cce:	000a                	c.slli	zero,0x2
+ cb2:	bf85                	j	c22 <main+0xf8>
+ cb4:	6544                	.insn	2, 0x6544
+ cb6:	6976                	.insn	2, 0x6976
+ cb8:	30206563          	bltu	zero,sp,fc2 <_data_lma+0x2e6>
+ cbc:	2578                	.insn	2, 0x2578
+ cbe:	3230                	.insn	2, 0x3230
+ cc0:	2058                	.insn	2, 0x2058
+ cc2:	6552                	.insn	2, 0x6552
+ cc4:	6f70                	.insn	2, 0x6f70
+ cc6:	646e                	.insn	2, 0x646e
+ cc8:	6465                	lui	s0,0x19
+ cca:	000a                	c.slli	zero,0x2
 
-00000cd0 <gpio_port_reg>:
- cd0:	0800 4001 0000 0000 1000 4001 1400 4001     ...@.......@...@
+00000ccc <gpio_port_reg>:
+ ccc:	0800 4001 0000 0000 1000 4001 1400 4001     ...@.......@...@

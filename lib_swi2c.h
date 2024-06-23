@@ -67,73 +67,72 @@ typedef enum {
 } i2c_err_t;
 
 
-// I2C Bus Data. Multiple Busses can be defined at runtime
+// I2C Device Variables. Multiple devices can share SCL and SDA Pins
 typedef struct {
 	gpio_pin_t pin_scl, pin_sda;  // SCL and SDA Pins. e.g GPIO_PD4
+	uint8_t address;              // I2C Deivce Address
 	uint32_t hz;                  // I2C Bus Speed (In Hz)
 	
 	// Private Variables
 	bool _active;                 // Keep track of I2C bus state (repeat start)
-} i2c_bus_t;
+} i2c_device_t;
 
 
 /// @breif Initialises the I2C bus pins, and sends a STOP command
-/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @param i2c_device_t i2c, I2C Device Struct
 /// @param gpio_pin_t scl, SCL I2C Pin
 /// @param gpio_pin_t sda, SDA I2C Pin
 /// @return i2c_err_t return state
-i2c_err_t swi2c_init(i2c_bus_t *i2c);
+i2c_err_t swi2c_init(i2c_device_t *i2c);
 
 /*** Hardware Control ********************************************************/
-/// @breif Sends a START Command to the I2C Bus
-/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @breif Sends a START Command to the I2C Device
+/// @param i2c_device_t i2c, I2C Device Struct
 /// @return i2c_err_t return state
-i2c_err_t swi2c_start(i2c_bus_t *i2c);
+i2c_err_t swi2c_start(i2c_device_t *i2c);
 
-/// @breif Sends a STOP Command to the I2C Bus
-/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @breif Sends a STOP Command to the I2C Device
+/// @param i2c_device_t i2c, I2C Device Struct
 /// @return i2c_err_t return state
-i2c_err_t swi2c_stop(i2c_bus_t *i2c);
+i2c_err_t swi2c_stop(i2c_device_t *i2c);
 
 /// @breif Transmits a Byte in Master Mode
-/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @param i2c_device_t i2c, I2C Device Struct
 /// @param uint8_t byte, data to be sent
 /// @return i2c_err_t return state
-i2c_err_t swi2c_master_tx_byte(i2c_bus_t *i2c, uint8_t data);
+i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data);
 
 /// @breif Receives a Byte in Master Mode
-/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @param i2c_device_t i2c, I2C Device Struct
 /// @param bool ack, ack bit. ACK (LOW): Read more  NACK (HIGH): Stop Reading
 /// @return i2c_err_t return state
-uint8_t swi2c_master_rx_byte(i2c_bus_t *i2c, bool ack);
+uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack);
 
 
 
 /// @breif Scans the Interface for devices that respond. Prints their address
-/// @param i2c_bus_t i2c, I2C Bus Struct
+/// @param i2c_device_t i2c, I2C Device Struct
 /// @return none
-void swi2c_scan(i2c_bus_t *i2c);
+void swi2c_scan(i2c_device_t *i2c);
 
 /// @breif Transmits data to a given Address
-/// @param i2c_bus_t i2c, I2C Bus Struct
-/// @param uint8_t addr, address to write to
+/// @param i2c_device_t i2c, I2C Device Struct
 /// @param uint8_t reg, register to write to
 /// @param uint8_t *data, data array pointer
 /// @param uint16_t size, number of bytes to transmit
 /// @return i2c_err_t return state
-i2c_err_t swi2c_master_transmit(i2c_bus_t *i2c, 
-    const uint8_t addr, const uint8_t reg, const uint8_t *data, uint16_t size);
+i2c_err_t swi2c_master_transmit(i2c_device_t *i2c, 
+                        const uint8_t reg, const uint8_t *data, uint16_t size);
 
 
 /// @breif Receive data from a given Address
-/// @param i2c_bus_t i2c, I2C Bus Struct
-/// @param uint8_t addr, address to read from
+/// @param i2c_device_t i2c, I2C Device Struct
 /// @param uint8_t reg, register to read from
 /// @param uint8_t *data, data array pointer
 /// @param uint16_t size, number of bytes to receive
 /// @return i2c_err_t return state
-i2c_err_t swi2c_master_receive(i2c_bus_t *i2c, 
-          const uint8_t addr, const uint8_t reg, uint8_t *data, uint16_t size);
+i2c_err_t swi2c_master_receive(i2c_device_t *i2c, 
+                              const uint8_t reg, uint8_t *data, uint16_t size);
 
 
 #endif
