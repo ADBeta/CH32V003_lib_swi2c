@@ -5,38 +5,38 @@ i2ctest.elf:     file format elf32-littleriscv
 Disassembly of section .init:
 
 00000000 <InterruptVector>:
-   0:	01d0006f          	j	81c <handle_reset>
+   0:	23b0006f          	j	a3a <handle_reset>
    4:	00000000          	.word	0x00000000
-   8:	0000089a          	.word	0x0000089a
-   c:	00000898          	.word	0x00000898
+   8:	00000ab8          	.word	0x00000ab8
+   c:	00000ab6          	.word	0x00000ab6
 	...
-  30:	00000898          	.word	0x00000898
+  30:	00000ab6          	.word	0x00000ab6
   34:	00000000          	.word	0x00000000
-  38:	00000898          	.word	0x00000898
+  38:	00000ab6          	.word	0x00000ab6
   3c:	00000000          	.word	0x00000000
-  40:	00000898          	.word	0x00000898
-  44:	00000898          	.word	0x00000898
-  48:	00000898          	.word	0x00000898
-  4c:	00000898          	.word	0x00000898
-  50:	00000898          	.word	0x00000898
-  54:	00000898          	.word	0x00000898
-  58:	00000898          	.word	0x00000898
-  5c:	00000898          	.word	0x00000898
-  60:	00000898          	.word	0x00000898
-  64:	00000898          	.word	0x00000898
-  68:	00000898          	.word	0x00000898
-  6c:	00000898          	.word	0x00000898
-  70:	00000898          	.word	0x00000898
-  74:	00000898          	.word	0x00000898
-  78:	00000898          	.word	0x00000898
-  7c:	00000898          	.word	0x00000898
-  80:	00000898          	.word	0x00000898
-  84:	00000898          	.word	0x00000898
-  88:	00000898          	.word	0x00000898
-  8c:	00000898          	.word	0x00000898
-  90:	00000898          	.word	0x00000898
-  94:	00000898          	.word	0x00000898
-  98:	00000898          	.word	0x00000898
+  40:	00000ab6          	.word	0x00000ab6
+  44:	00000ab6          	.word	0x00000ab6
+  48:	00000ab6          	.word	0x00000ab6
+  4c:	00000ab6          	.word	0x00000ab6
+  50:	00000ab6          	.word	0x00000ab6
+  54:	00000ab6          	.word	0x00000ab6
+  58:	00000ab6          	.word	0x00000ab6
+  5c:	00000ab6          	.word	0x00000ab6
+  60:	00000ab6          	.word	0x00000ab6
+  64:	00000ab6          	.word	0x00000ab6
+  68:	00000ab6          	.word	0x00000ab6
+  6c:	00000ab6          	.word	0x00000ab6
+  70:	00000ab6          	.word	0x00000ab6
+  74:	00000ab6          	.word	0x00000ab6
+  78:	00000ab6          	.word	0x00000ab6
+  7c:	00000ab6          	.word	0x00000ab6
+  80:	00000ab6          	.word	0x00000ab6
+  84:	00000ab6          	.word	0x00000ab6
+  88:	00000ab6          	.word	0x00000ab6
+  8c:	00000ab6          	.word	0x00000ab6
+  90:	00000ab6          	.word	0x00000ab6
+  94:	00000ab6          	.word	0x00000ab6
+  98:	00000ab6          	.word	0x00000ab6
   9c:	0000                	.insn	2, 0x
 	...
 
@@ -119,7 +119,7 @@ Disassembly of section .text:
  14a:	853a                	mv	a0,a4
  14c:	c23e                	sw	a5,4(sp)
  14e:	c01a                	sw	t1,0(sp)
- 150:	14b000ef          	jal	a9a <memset>
+ 150:	36b000ef          	jal	cba <memset>
  154:	4302                	lw	t1,0(sp)
  156:	4792                	lw	a5,4(sp)
  158:	872a                	mv	a4,a0
@@ -238,7 +238,7 @@ Disassembly of section .text:
  27c:	0ff57713          	zext.b	a4,a0
  280:	6785                	lui	a5,0x1
  282:	070a                	slli	a4,a4,0x2
- 284:	ccc78793          	addi	a5,a5,-820 # ccc <gpio_port_reg>
+ 284:	eb878793          	addi	a5,a5,-328 # eb8 <gpio_port_reg>
  288:	97ba                	add	a5,a5,a4
  28a:	8121                	srli	a0,a0,0x8
  28c:	4705                	li	a4,1
@@ -270,1254 +270,1457 @@ static i2c_err_t clk_stretch(const gpio_pin_t scl)
 }
  2aa:	8082                	ret
 
-000002ac <master_rx_bit.constprop.0>:
-static bool master_rx_bit(const i2c_device_t *i2c)
-{
-	bool bit = 0;
-	// Release the SDA pin so the slave can set data, then release SCL
-	// to request data
-	RELEASE_SDA;
- 2ac:	200002b7          	lui	t0,0x20000
- 2b0:	00028293          	mv	t0,t0
- 2b4:	0042a783          	lw	a5,4(t0) # 20000004 <dev+0x4>
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 2b8:	40021337          	lui	t1,0x40021
- 2bc:	01832583          	lw	a1,24(t1) # 40021018 <__global_pointer$+0x20020800>
- 2c0:	4711                	li	a4,4
- 2c2:	00f71633          	sll	a2,a4,a5
-static bool master_rx_bit(const i2c_device_t *i2c)
- 2c6:	1111                	addi	sp,sp,-28
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 2c8:	8e4d                	or	a2,a2,a1
-static bool master_rx_bit(const i2c_device_t *i2c)
- 2ca:	ca22                	sw	s0,20(sp)
- 2cc:	c826                	sw	s1,16(sp)
- 2ce:	cc06                	sw	ra,24(sp)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 2d0:	00166613          	ori	a2,a2,1
- 2d4:	00c32c23          	sw	a2,24(t1)
- 2d8:	0ff7f693          	zext.b	a3,a5
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 2dc:	6605                	lui	a2,0x1
- 2de:	ccc60613          	addi	a2,a2,-820 # ccc <gpio_port_reg>
- 2e2:	068a                	slli	a3,a3,0x2
- 2e4:	96b2                	add	a3,a3,a2
- 2e6:	428c                	lw	a1,0(a3)
- 2e8:	83a1                	srli	a5,a5,0x8
- 2ea:	0ff7f793          	zext.b	a5,a5
- 2ee:	0005a383          	lw	t2,0(a1)
- 2f2:	00279693          	slli	a3,a5,0x2
- 2f6:	443d                	li	s0,15
- 2f8:	00d41533          	sll	a0,s0,a3
- 2fc:	fff54513          	not	a0,a0
- 300:	00757533          	and	a0,a0,t2
- 304:	c188                	sw	a0,0(a1)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 306:	4188                	lw	a0,0(a1)
- 308:	00d716b3          	sll	a3,a4,a3
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 30c:	c63e                	sw	a5,12(sp)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 30e:	8ec9                	or	a3,a3,a0
- 310:	c194                	sw	a3,0(a1)
-	RELEASE_SCL;
- 312:	0002a503          	lw	a0,0(t0)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 316:	01832283          	lw	t0,24(t1)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 31a:	c42e                	sw	a1,8(sp)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 31c:	00a716b3          	sll	a3,a4,a0
- 320:	00d2e2b3          	or	t0,t0,a3
- 324:	c236                	sw	a3,4(sp)
- 326:	0ff57393          	zext.b	t2,a0
- 32a:	0012e293          	ori	t0,t0,1
- 32e:	00532c23          	sw	t0,24(t1)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 332:	00239313          	slli	t1,t2,0x2
- 336:	961a                	add	a2,a2,t1
- 338:	4204                	lw	s1,0(a2)
- 33a:	00655613          	srli	a2,a0,0x6
- 33e:	3fc67613          	andi	a2,a2,1020
- 342:	0004a303          	lw	t1,0(s1)
- 346:	00c41433          	sll	s0,s0,a2
- 34a:	fff44413          	not	s0,s0
- 34e:	00837333          	and	t1,t1,s0
- 352:	0064a023          	sw	t1,0(s1)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 356:	0004a303          	lw	t1,0(s1)
- 35a:	00c71733          	sll	a4,a4,a2
- 35e:	c032                	sw	a2,0(sp)
- 360:	00676733          	or	a4,a4,t1
- 364:	c098                	sw	a4,0(s1)
-
-	// Wait for clk stretch, Only read pin if it's OK
-	if(clk_stretch(i2c->pin_scl) == I2C_OK)
- 366:	3f19                	jal	27c <clk_stretch>
- 368:	872a                	mv	a4,a0
- 36a:	4602                	lw	a2,0(sp)
- 36c:	4692                	lw	a3,4(sp)
- 36e:	4501                	li	a0,0
- 370:	eb11                	bnez	a4,384 <master_rx_bit.constprop.0+0xd8>
-	if( (gpio_port_reg[ byte[0] ]->INDR & (0x01 << byte[1])) != 0x00 ) 
- 372:	45a2                	lw	a1,8(sp)
- 374:	47b2                	lw	a5,12(sp)
- 376:	4505                	li	a0,1
- 378:	4598                	lw	a4,8(a1)
- 37a:	00f51533          	sll	a0,a0,a5
- 37e:	8d79                	and	a0,a0,a4
- 380:	00a03533          	snez	a0,a0
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 384:	400217b7          	lui	a5,0x40021
- 388:	4f98                	lw	a4,24(a5)
-		bit = (bool)gpio_digital_read(i2c->pin_sda);
+000002ac <swi2c_master_rx_byte.constprop.0>:
 	}
 
-	ASSERT_SCL; // SCL LOW
-	return bit;
-}
- 38a:	40e2                	lw	ra,24(sp)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 38c:	8ed9                	or	a3,a3,a4
- 38e:	0016e693          	ori	a3,a3,1
- 392:	cf94                	sw	a3,24(a5)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 394:	409c                	lw	a5,0(s1)
- 396:	8c7d                	and	s0,s0,a5
- 398:	c080                	sw	s0,0(s1)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 39a:	4098                	lw	a4,0(s1)
- 39c:	4785                	li	a5,1
-}
- 39e:	4452                	lw	s0,20(sp)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 3a0:	00c797b3          	sll	a5,a5,a2
- 3a4:	8fd9                	or	a5,a5,a4
- 3a6:	c09c                	sw	a5,0(s1)
-}
- 3a8:	44c2                	lw	s1,16(sp)
- 3aa:	0171                	addi	sp,sp,28
- 3ac:	8082                	ret
-
-000003ae <swi2c_start.constprop.0>:
-	// Set STOP Condition to get the bus into a known state
-	return swi2c_stop(i2c);
-}
-
-
-i2c_err_t swi2c_start(i2c_device_t *i2c)
- 3ae:	1151                	addi	sp,sp,-12
- 3b0:	c222                	sw	s0,4(sp)
-	i2c_err_t stat = I2C_OK;
-
-	// If Bus is active, do a repeated START
-	if(i2c->_active)
-	{
-		RELEASE_SDA;    // SDA HIGH
- 3b2:	20000437          	lui	s0,0x20000
- 3b6:	00040593          	mv	a1,s0
- 3ba:	41d4                	lw	a3,4(a1)
-i2c_err_t swi2c_start(i2c_device_t *i2c)
- 3bc:	c026                	sw	s1,0(sp)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 3be:	6485                	lui	s1,0x1
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 3c0:	0ff6f713          	zext.b	a4,a3
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 3c4:	ccc48793          	addi	a5,s1,-820 # ccc <gpio_port_reg>
- 3c8:	00271613          	slli	a2,a4,0x2
- 3cc:	97b2                	add	a5,a5,a2
- 3ce:	4390                	lw	a2,0(a5)
-	if(i2c->_active)
- 3d0:	0105c783          	lbu	a5,16(a1)
-i2c_err_t swi2c_start(i2c_device_t *i2c)
- 3d4:	c406                	sw	ra,8(sp)
- 3d6:	00040413          	mv	s0,s0
- 3da:	ccc48493          	addi	s1,s1,-820
-	if(i2c->_active)
- 3de:	efc9                	bnez	a5,478 <swi2c_start.constprop.0+0xca>
-		RELEASE_SCL;    // SCL HIGH
-		if( (stat = clk_stretch(i2c->pin_scl)) != I2C_OK) return stat;
-	}
-
-	// START Condition
-	ASSERT_SDA;        // SDA LOW
- 3e0:	405c                	lw	a5,4(s0)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 3e2:	400215b7          	lui	a1,0x40021
- 3e6:	4d88                	lw	a0,24(a1)
- 3e8:	0ff7f713          	zext.b	a4,a5
- 3ec:	4611                	li	a2,4
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 3ee:	070a                	slli	a4,a4,0x2
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 3f0:	00f616b3          	sll	a3,a2,a5
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 3f4:	9726                	add	a4,a4,s1
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 3f6:	8ec9                	or	a3,a3,a0
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 3f8:	4308                	lw	a0,0(a4)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 3fa:	0016e693          	ori	a3,a3,1
- 3fe:	cd94                	sw	a3,24(a1)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 400:	8399                	srli	a5,a5,0x6
- 402:	00052303          	lw	t1,0(a0)
- 406:	3fc7f793          	andi	a5,a5,1020
- 40a:	473d                	li	a4,15
- 40c:	00f716b3          	sll	a3,a4,a5
- 410:	fff6c693          	not	a3,a3
- 414:	0066f6b3          	and	a3,a3,t1
- 418:	c114                	sw	a3,0(a0)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 41a:	00052303          	lw	t1,0(a0)
- 41e:	4685                	li	a3,1
- 420:	00f697b3          	sll	a5,a3,a5
- 424:	0067e7b3          	or	a5,a5,t1
- 428:	c11c                	sw	a5,0(a0)
-	ASSERT_SCL;        // SCL LOW
- 42a:	401c                	lw	a5,0(s0)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 42c:	0185a303          	lw	t1,24(a1) # 40021018 <__global_pointer$+0x20020800>
- 430:	00f61633          	sll	a2,a2,a5
- 434:	00666633          	or	a2,a2,t1
- 438:	0ff7f513          	zext.b	a0,a5
- 43c:	00166613          	ori	a2,a2,1
- 440:	cd90                	sw	a2,24(a1)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 442:	00251613          	slli	a2,a0,0x2
- 446:	9626                	add	a2,a2,s1
- 448:	4210                	lw	a2,0(a2)
- 44a:	8399                	srli	a5,a5,0x6
- 44c:	3fc7f793          	andi	a5,a5,1020
- 450:	420c                	lw	a1,0(a2)
- 452:	00f71733          	sll	a4,a4,a5
- 456:	fff74713          	not	a4,a4
- 45a:	8f6d                	and	a4,a4,a1
- 45c:	c218                	sw	a4,0(a2)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 45e:	4218                	lw	a4,0(a2)
- 460:	00f697b3          	sll	a5,a3,a5
-	
-	// Mark the I2C Bus as Active
-	i2c->_active = true;
-	return stat;
- 464:	4501                	li	a0,0
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 466:	8fd9                	or	a5,a5,a4
- 468:	c21c                	sw	a5,0(a2)
-	i2c->_active = true;
- 46a:	00d40823          	sb	a3,16(s0) # 20000010 <dev+0x10>
-}
- 46e:	40a2                	lw	ra,8(sp)
- 470:	4412                	lw	s0,4(sp)
- 472:	4482                	lw	s1,0(sp)
- 474:	0131                	addi	sp,sp,12
- 476:	8082                	ret
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 478:	400215b7          	lui	a1,0x40021
- 47c:	4d88                	lw	a0,24(a1)
- 47e:	4791                	li	a5,4
- 480:	00e79733          	sll	a4,a5,a4
- 484:	8f49                	or	a4,a4,a0
- 486:	00176713          	ori	a4,a4,1
- 48a:	cd98                	sw	a4,24(a1)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 48c:	8299                	srli	a3,a3,0x6
- 48e:	00062303          	lw	t1,0(a2)
- 492:	3fc6f693          	andi	a3,a3,1020
- 496:	473d                	li	a4,15
- 498:	00d71533          	sll	a0,a4,a3
- 49c:	fff54513          	not	a0,a0
- 4a0:	00657533          	and	a0,a0,t1
- 4a4:	c208                	sw	a0,0(a2)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 4a6:	4208                	lw	a0,0(a2)
- 4a8:	00d796b3          	sll	a3,a5,a3
- 4ac:	8ec9                	or	a3,a3,a0
-		RELEASE_SCL;    // SCL HIGH
- 4ae:	4008                	lw	a0,0(s0)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 4b0:	c214                	sw	a3,0(a2)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 4b2:	0185a303          	lw	t1,24(a1) # 40021018 <__global_pointer$+0x20020800>
- 4b6:	0ff57693          	zext.b	a3,a0
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 4ba:	068a                	slli	a3,a3,0x2
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 4bc:	00a79633          	sll	a2,a5,a0
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 4c0:	96a6                	add	a3,a3,s1
- 4c2:	4294                	lw	a3,0(a3)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 4c4:	00666633          	or	a2,a2,t1
- 4c8:	00166613          	ori	a2,a2,1
- 4cc:	cd90                	sw	a2,24(a1)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 4ce:	00655613          	srli	a2,a0,0x6
- 4d2:	428c                	lw	a1,0(a3)
- 4d4:	3fc67613          	andi	a2,a2,1020
- 4d8:	00c71733          	sll	a4,a4,a2
- 4dc:	fff74713          	not	a4,a4
- 4e0:	8f6d                	and	a4,a4,a1
- 4e2:	c298                	sw	a4,0(a3)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 4e4:	4298                	lw	a4,0(a3)
- 4e6:	00c797b3          	sll	a5,a5,a2
- 4ea:	8fd9                	or	a5,a5,a4
- 4ec:	c29c                	sw	a5,0(a3)
-		if( (stat = clk_stretch(i2c->pin_scl)) != I2C_OK) return stat;
- 4ee:	3379                	jal	27c <clk_stretch>
- 4f0:	ee0508e3          	beqz	a0,3e0 <swi2c_start.constprop.0+0x32>
- 4f4:	bfad                	j	46e <swi2c_start.constprop.0+0xc0>
-
-000004f6 <internal_handle_input.constprop.0>:
- 4f6:	e00007b7          	lui	a5,0xe0000
- 4fa:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8dc>
- 4fe:	439c                	lw	a5,0(a5)
- 500:	8082                	ret
-
-00000502 <_write.constprop.0>:
- 502:	1101                	addi	sp,sp,-32
- 504:	cc22                	sw	s0,24(sp)
- 506:	ce06                	sw	ra,28(sp)
- 508:	ca26                	sw	s1,20(sp)
- 50a:	c02a                	sw	a0,0(sp)
- 50c:	c802                	sw	zero,16(sp)
- 50e:	842e                	mv	s0,a1
- 510:	e1f9                	bnez	a1,5d6 <_write.constprop.0+0xd4>
- 512:	e00007b7          	lui	a5,0xe0000
- 516:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8dc>
- 51a:	439c                	lw	a5,0(a5)
- 51c:	c789                	beqz	a5,526 <_write.constprop.0+0x24>
- 51e:	0807f793          	andi	a5,a5,128
- 522:	e391                	bnez	a5,526 <_write.constprop.0+0x24>
- 524:	3fc9                	jal	4f6 <internal_handle_input.constprop.0>
- 526:	40f2                	lw	ra,28(sp)
- 528:	8522                	mv	a0,s0
- 52a:	4462                	lw	s0,24(sp)
- 52c:	44d2                	lw	s1,20(sp)
- 52e:	6105                	addi	sp,sp,32
- 530:	8082                	ret
- 532:	409406b3          	sub	a3,s0,s1
- 536:	461d                	li	a2,7
- 538:	8736                	mv	a4,a3
- 53a:	00d65363          	bge	a2,a3,540 <_write.constprop.0+0x3e>
- 53e:	471d                	li	a4,7
- 540:	00027637          	lui	a2,0x27
- 544:	10160613          	addi	a2,a2,257 # 27101 <lib_swi2c.c.56ead7c2+0x24966>
- 548:	00032583          	lw	a1,0(t1)
- 54c:	0805f513          	andi	a0,a1,128
- 550:	ed3d                	bnez	a0,5ce <_write.constprop.0+0xcc>
- 552:	c981                	beqz	a1,562 <_write.constprop.0+0x60>
- 554:	c61a                	sw	t1,12(sp)
- 556:	c43a                	sw	a4,8(sp)
- 558:	c236                	sw	a3,4(sp)
- 55a:	3f71                	jal	4f6 <internal_handle_input.constprop.0>
- 55c:	4332                	lw	t1,12(sp)
- 55e:	4722                	lw	a4,8(sp)
- 560:	4692                	lw	a3,4(sp)
- 562:	0036a693          	slti	a3,a3,3
- 566:	4601                	li	a2,0
- 568:	e299                	bnez	a3,56e <_write.constprop.0+0x6c>
- 56a:	ffd70613          	addi	a2,a4,-3
- 56e:	4782                	lw	a5,0(sp)
- 570:	00348593          	addi	a1,s1,3
- 574:	0808                	addi	a0,sp,16
- 576:	95be                	add	a1,a1,a5
- 578:	c41a                	sw	t1,8(sp)
- 57a:	c23a                	sw	a4,4(sp)
- 57c:	2b05                	jal	aac <memcpy>
- 57e:	4642                	lw	a2,16(sp)
- 580:	4782                	lw	a5,0(sp)
- 582:	e00006b7          	lui	a3,0xe0000
- 586:	4322                	lw	t1,8(sp)
- 588:	4712                	lw	a4,4(sp)
- 58a:	0f868693          	addi	a3,a3,248 # e00000f8 <__global_pointer$+0xbffff8e0>
- 58e:	c290                	sw	a2,0(a3)
- 590:	458d                	li	a1,3
- 592:	00978633          	add	a2,a5,s1
- 596:	4681                	li	a3,0
- 598:	00064283          	lbu	t0,0(a2)
- 59c:	0685                	addi	a3,a3,1
- 59e:	01068793          	addi	a5,a3,16
- 5a2:	00278533          	add	a0,a5,sp
- 5a6:	00550023          	sb	t0,0(a0)
- 5aa:	00d70563          	beq	a4,a3,5b4 <_write.constprop.0+0xb2>
- 5ae:	0605                	addi	a2,a2,1
- 5b0:	feb694e3          	bne	a3,a1,598 <_write.constprop.0+0x96>
- 5b4:	00470693          	addi	a3,a4,4
- 5b8:	f806e693          	ori	a3,a3,-128
- 5bc:	00d10823          	sb	a3,16(sp)
- 5c0:	46c2                	lw	a3,16(sp)
- 5c2:	94ba                	add	s1,s1,a4
- 5c4:	00d32023          	sw	a3,0(t1)
- 5c8:	f684c5e3          	blt	s1,s0,532 <_write.constprop.0+0x30>
- 5cc:	bfa9                	j	526 <_write.constprop.0+0x24>
- 5ce:	167d                	addi	a2,a2,-1
- 5d0:	fe25                	bnez	a2,548 <_write.constprop.0+0x46>
- 5d2:	8426                	mv	s0,s1
- 5d4:	bf89                	j	526 <_write.constprop.0+0x24>
- 5d6:	e0000337          	lui	t1,0xe0000
- 5da:	4481                	li	s1,0
- 5dc:	0f430313          	addi	t1,t1,244 # e00000f4 <__global_pointer$+0xbffff8dc>
- 5e0:	b7e5                	j	5c8 <_write.constprop.0+0xc6>
-
-000005e2 <__puts_uart>:
- 5e2:	1151                	addi	sp,sp,-12
- 5e4:	c222                	sw	s0,4(sp)
- 5e6:	c406                	sw	ra,8(sp)
- 5e8:	842e                	mv	s0,a1
- 5ea:	3f21                	jal	502 <_write.constprop.0>
- 5ec:	40a2                	lw	ra,8(sp)
- 5ee:	8522                	mv	a0,s0
- 5f0:	4412                	lw	s0,4(sp)
- 5f2:	0131                	addi	sp,sp,12
- 5f4:	8082                	ret
-
-000005f6 <master_tx_bit.constprop.0.isra.0>:
-		RELEASE_SDA;
- 5f6:	200002b7          	lui	t0,0x20000
- 5fa:	00028793          	mv	a5,t0
- 5fe:	43dc                	lw	a5,4(a5)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 600:	6605                	lui	a2,0x1
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 602:	4311                	li	t1,4
- 604:	0ff7f693          	zext.b	a3,a5
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 608:	ccc60713          	addi	a4,a2,-820 # ccc <gpio_port_reg>
- 60c:	068a                	slli	a3,a3,0x2
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 60e:	00f313b3          	sll	t2,t1,a5
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 612:	8399                	srli	a5,a5,0x6
-static i2c_err_t master_tx_bit(const i2c_device_t *i2c, const bool bit)
- 614:	1121                	addi	sp,sp,-24
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 616:	9736                	add	a4,a4,a3
- 618:	3fc7f793          	andi	a5,a5,1020
- 61c:	46bd                	li	a3,15
- 61e:	00f696b3          	sll	a3,a3,a5
- 622:	400215b7          	lui	a1,0x40021
-static i2c_err_t master_tx_bit(const i2c_device_t *i2c, const bool bit)
- 626:	ca06                	sw	ra,20(sp)
- 628:	c822                	sw	s0,16(sp)
- 62a:	c626                	sw	s1,12(sp)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 62c:	4318                	lw	a4,0(a4)
- 62e:	fff6c693          	not	a3,a3
- 632:	00028293          	mv	t0,t0
- 636:	ccc60613          	addi	a2,a2,-820
- 63a:	05e1                	addi	a1,a1,24 # 40021018 <__global_pointer$+0x20020800>
-	if(bit)
- 63c:	cd59                	beqz	a0,6da <master_tx_bit.constprop.0.isra.0+0xe4>
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 63e:	4188                	lw	a0,0(a1)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 640:	00f31333          	sll	t1,t1,a5
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 644:	00756533          	or	a0,a0,t2
- 648:	00156513          	ori	a0,a0,1
- 64c:	c188                	sw	a0,0(a1)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 64e:	430c                	lw	a1,0(a4)
- 650:	8eed                	and	a3,a3,a1
- 652:	c314                	sw	a3,0(a4)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 654:	4314                	lw	a3,0(a4)
- 656:	00d36333          	or	t1,t1,a3
- 65a:	00672023          	sw	t1,0(a4)
-	RELEASE_SCL;   // SCL HIGH
- 65e:	0002a503          	lw	a0,0(t0) # 20000000 <dev>
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 662:	400217b7          	lui	a5,0x40021
- 666:	4f8c                	lw	a1,24(a5)
- 668:	4691                	li	a3,4
- 66a:	00a69733          	sll	a4,a3,a0
- 66e:	8dd9                	or	a1,a1,a4
- 670:	c43a                	sw	a4,8(sp)
- 672:	0ff57313          	zext.b	t1,a0
- 676:	0015e593          	ori	a1,a1,1
- 67a:	cf8c                	sw	a1,24(a5)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 67c:	00231593          	slli	a1,t1,0x2
- 680:	962e                	add	a2,a2,a1
- 682:	4200                	lw	s0,0(a2)
- 684:	00655613          	srli	a2,a0,0x6
- 688:	3fc67613          	andi	a2,a2,1020
- 68c:	400c                	lw	a1,0(s0)
- 68e:	44bd                	li	s1,15
- 690:	00c494b3          	sll	s1,s1,a2
- 694:	fff4c493          	not	s1,s1
- 698:	8de5                	and	a1,a1,s1
- 69a:	c00c                	sw	a1,0(s0)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 69c:	400c                	lw	a1,0(s0)
- 69e:	00c696b3          	sll	a3,a3,a2
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 6a2:	07e1                	addi	a5,a5,24 # 40021018 <__global_pointer$+0x20020800>
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 6a4:	8ecd                	or	a3,a3,a1
- 6a6:	c014                	sw	a3,0(s0)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 6a8:	c23e                	sw	a5,4(sp)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 6aa:	c032                	sw	a2,0(sp)
-	i2c_err_t stat = clk_stretch(i2c->pin_scl);
- 6ac:	3ec1                	jal	27c <clk_stretch>
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 6ae:	4792                	lw	a5,4(sp)
- 6b0:	4722                	lw	a4,8(sp)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 6b2:	4602                	lw	a2,0(sp)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 6b4:	4394                	lw	a3,0(a5)
-}
- 6b6:	40d2                	lw	ra,20(sp)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 6b8:	8f55                	or	a4,a4,a3
- 6ba:	00176713          	ori	a4,a4,1
- 6be:	c398                	sw	a4,0(a5)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 6c0:	401c                	lw	a5,0(s0)
- 6c2:	8cfd                	and	s1,s1,a5
- 6c4:	c004                	sw	s1,0(s0)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 6c6:	4018                	lw	a4,0(s0)
- 6c8:	4785                	li	a5,1
- 6ca:	00c797b3          	sll	a5,a5,a2
- 6ce:	8fd9                	or	a5,a5,a4
- 6d0:	c01c                	sw	a5,0(s0)
-}
- 6d2:	4442                	lw	s0,16(sp)
- 6d4:	44b2                	lw	s1,12(sp)
- 6d6:	0161                	addi	sp,sp,24
- 6d8:	8082                	ret
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 6da:	4188                	lw	a0,0(a1)
- 6dc:	00756533          	or	a0,a0,t2
- 6e0:	00156513          	ori	a0,a0,1
- 6e4:	c188                	sw	a0,0(a1)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 6e6:	430c                	lw	a1,0(a4)
- 6e8:	8eed                	and	a3,a3,a1
- 6ea:	c314                	sw	a3,0(a4)
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 6ec:	430c                	lw	a1,0(a4)
- 6ee:	4685                	li	a3,1
- 6f0:	00f697b3          	sll	a5,a3,a5
- 6f4:	8fcd                	or	a5,a5,a1
- 6f6:	c31c                	sw	a5,0(a4)
-}
- 6f8:	b79d                	j	65e <master_tx_bit.constprop.0.isra.0+0x68>
-
-000006fa <swi2c_master_tx_byte.constprop.0>:
-	
-	i2c->_active = false;
 	return stat;
 }
 
-i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data)
- 6fa:	1151                	addi	sp,sp,-12
- 6fc:	c222                	sw	s0,4(sp)
- 6fe:	c026                	sw	s1,0(sp)
- 700:	c406                	sw	ra,8(sp)
- 702:	842a                	mv	s0,a0
- 704:	44a1                	li	s1,8
+uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack)
+ 2ac:	fd410113          	addi	sp,sp,-44
+ 2b0:	d222                	sw	s0,36(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 2b2:	40021437          	lui	s0,0x40021
+uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack)
+ 2b6:	d406                	sw	ra,40(sp)
+ 2b8:	d026                	sw	s1,32(sp)
+ 2ba:	c22a                	sw	a0,4(sp)
+ 2bc:	42a1                	li	t0,8
 {
-	i2c_err_t stat = I2C_OK;
-
-	// Transmit bits MSB First
+	// Read bits MSB First
 	uint8_t index = 8;
-	while(index--)
- 706:	14fd                	addi	s1,s1,-1
+	uint8_t byte = 0x00;
+ 2be:	4601                	li	a2,0
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 2c0:	0461                	addi	s0,s0,24 # 40021018 <__global_pointer$+0x20020800>
+	while(index--) 
 	{
-		master_tx_bit(i2c, data & 0x80);
- 708:	00745513          	srli	a0,s0,0x7
-	while(index--)
- 70c:	0ff4f493          	zext.b	s1,s1
-		data = data << 1;
- 710:	0406                	slli	s0,s0,0x1
-		master_tx_bit(i2c, data & 0x80);
- 712:	35d5                	jal	5f6 <master_tx_bit.constprop.0.isra.0>
-		data = data << 1;
- 714:	0ff47413          	zext.b	s0,s0
-	while(index--)
- 718:	f4fd                	bnez	s1,706 <swi2c_master_tx_byte.constprop.0+0xc>
+		// Release the SDA pin so the slave can set data, then release SCL
+		// to request data
+		RELEASE_SDA;
+ 2c2:	20000337          	lui	t1,0x20000
+ 2c6:	00030513          	mv	a0,t1
+ 2ca:	415c                	lw	a5,4(a0)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 2cc:	00042383          	lw	t2,0(s0)
+ 2d0:	ce32                	sw	a2,28(sp)
+ 2d2:	0ff7f713          	zext.b	a4,a5
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 2d6:	6605                	lui	a2,0x1
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 2d8:	4691                	li	a3,4
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 2da:	eb860093          	addi	ra,a2,-328 # eb8 <gpio_port_reg>
+ 2de:	070a                	slli	a4,a4,0x2
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 2e0:	00f695b3          	sll	a1,a3,a5
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 2e4:	9706                	add	a4,a4,ra
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 2e6:	0075e5b3          	or	a1,a1,t2
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 2ea:	00072383          	lw	t2,0(a4)
+ 2ee:	cc16                	sw	t0,24(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 2f0:	0015e593          	ori	a1,a1,1
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 2f4:	83a1                	srli	a5,a5,0x8
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 2f6:	c00c                	sw	a1,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 2f8:	0ff7f793          	zext.b	a5,a5
+ 2fc:	0003a483          	lw	s1,0(t2)
+ 300:	c03e                	sw	a5,0(sp)
+ 302:	00279713          	slli	a4,a5,0x2
+ 306:	47bd                	li	a5,15
+ 308:	00e795b3          	sll	a1,a5,a4
+ 30c:	fff5c593          	not	a1,a1
+ 310:	8de5                	and	a1,a1,s1
+ 312:	00b3a023          	sw	a1,0(t2)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 316:	0003a583          	lw	a1,0(t2)
+ 31a:	00e69733          	sll	a4,a3,a4
+		RELEASE_SCL;
+ 31e:	4108                	lw	a0,0(a0)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 320:	8f4d                	or	a4,a4,a1
+ 322:	00e3a023          	sw	a4,0(t2)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 326:	4018                	lw	a4,0(s0)
+ 328:	00a695b3          	sll	a1,a3,a0
+ 32c:	0ff57493          	zext.b	s1,a0
+ 330:	8f4d                	or	a4,a4,a1
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 332:	048a                	slli	s1,s1,0x2
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 334:	c82e                	sw	a1,16(sp)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 336:	90a6                	add	ra,ra,s1
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 338:	ca1e                	sw	t2,20(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 33a:	00176713          	ori	a4,a4,1
+ 33e:	c018                	sw	a4,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 340:	0000a703          	lw	a4,0(ra)
+ 344:	00655493          	srli	s1,a0,0x6
+ 348:	3fc4f493          	andi	s1,s1,1020
+ 34c:	00072083          	lw	ra,0(a4)
+ 350:	009797b3          	sll	a5,a5,s1
+ 354:	fff7c793          	not	a5,a5
+ 358:	00f0f0b3          	and	ra,ra,a5
+ 35c:	00172023          	sw	ra,0(a4)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 360:	00072083          	lw	ra,0(a4)
+ 364:	009696b3          	sll	a3,a3,s1
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 368:	c63e                	sw	a5,12(sp)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 36a:	0016e6b3          	or	a3,a3,ra
+ 36e:	c314                	sw	a3,0(a4)
+ 370:	c43a                	sw	a4,8(sp)
+
+		// Wait for clk stretch, Only read pin if it's OK
+		if(clk_stretch(i2c->pin_scl) == I2C_OK)
+ 372:	3729                	jal	27c <clk_stretch>
+ 374:	6605                	lui	a2,0x1
+ 376:	20000337          	lui	t1,0x20000
+ 37a:	eb860693          	addi	a3,a2,-328 # eb8 <gpio_port_reg>
+ 37e:	4722                	lw	a4,8(sp)
+ 380:	47b2                	lw	a5,12(sp)
+ 382:	45c2                	lw	a1,16(sp)
+ 384:	42e2                	lw	t0,24(sp)
+ 386:	4672                	lw	a2,28(sp)
+ 388:	00030313          	mv	t1,t1
+ 38c:	e105                	bnez	a0,3ac <swi2c_master_rx_byte.constprop.0+0x100>
+	if( (gpio_port_reg[ byte[0] ]->INDR & (0x01 << byte[1])) != 0x00 ) 
+ 38e:	43d2                	lw	t2,20(sp)
+ 390:	4082                	lw	ra,0(sp)
+ 392:	4505                	li	a0,1
+ 394:	0083a383          	lw	t2,8(t2)
+ 398:	00151533          	sll	a0,a0,ra
+		{
+			// Shift the byte by 1
+			byte = byte << 1;
+ 39c:	0606                	slli	a2,a2,0x1
+	if( (gpio_port_reg[ byte[0] ]->INDR & (0x01 << byte[1])) != 0x00 ) 
+ 39e:	00757533          	and	a0,a0,t2
+			byte = byte << 1;
+ 3a2:	0ff67613          	zext.b	a2,a2
+	if( (gpio_port_reg[ byte[0] ]->INDR & (0x01 << byte[1])) != 0x00 ) 
+ 3a6:	c119                	beqz	a0,3ac <swi2c_master_rx_byte.constprop.0+0x100>
+			// If SDA is HIGH, set the LSB to 1
+			if(gpio_digital_read(i2c->pin_sda)) byte |= 0x01;
+ 3a8:	00166613          	ori	a2,a2,1
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 3ac:	4008                	lw	a0,0(s0)
+	while(index--) 
+ 3ae:	12fd                	addi	t0,t0,-1
+ 3b0:	0ff2f293          	zext.b	t0,t0
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 3b4:	8dc9                	or	a1,a1,a0
+ 3b6:	0015e593          	ori	a1,a1,1
+ 3ba:	c00c                	sw	a1,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 3bc:	430c                	lw	a1,0(a4)
+ 3be:	8fed                	and	a5,a5,a1
+ 3c0:	c31c                	sw	a5,0(a4)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 3c2:	431c                	lw	a5,0(a4)
+ 3c4:	4585                	li	a1,1
+ 3c6:	009594b3          	sll	s1,a1,s1
+ 3ca:	8cdd                	or	s1,s1,a5
+ 3cc:	c304                	sw	s1,0(a4)
+	while(index--) 
+ 3ce:	ee029ae3          	bnez	t0,2c2 <swi2c_master_rx_byte.constprop.0+0x16>
+		// SCL LOW for next loop
+		ASSERT_SCL;
 	}
+
+	// Write ACK Bit, ACK (0) = Read More,  NACK (1) = Stop Reading
+	if(ack) RELEASE_SDA; else ASSERT_SDA;
+ 3d2:	00432783          	lw	a5,4(t1) # 20000004 <dev+0x4>
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 3d6:	4291                	li	t0,4
+	if(ack) RELEASE_SDA; else ASSERT_SDA;
+ 3d8:	4492                	lw	s1,4(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 3da:	0ff7f713          	zext.b	a4,a5
+ 3de:	00f293b3          	sll	t2,t0,a5
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 3e2:	8399                	srli	a5,a5,0x6
+ 3e4:	070a                	slli	a4,a4,0x2
+ 3e6:	3fc7f793          	andi	a5,a5,1020
+ 3ea:	453d                	li	a0,15
+ 3ec:	9736                	add	a4,a4,a3
+ 3ee:	00f51533          	sll	a0,a0,a5
+ 3f2:	4318                	lw	a4,0(a4)
+ 3f4:	fff54513          	not	a0,a0
+	if(ack) RELEASE_SDA; else ASSERT_SDA;
+ 3f8:	c8dd                	beqz	s1,4ae <swi2c_master_rx_byte.constprop.0+0x202>
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 3fa:	400c                	lw	a1,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 3fc:	00f292b3          	sll	t0,t0,a5
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 400:	0075e5b3          	or	a1,a1,t2
+ 404:	0015e593          	ori	a1,a1,1
+ 408:	c00c                	sw	a1,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 40a:	430c                	lw	a1,0(a4)
+ 40c:	8de9                	and	a1,a1,a0
+ 40e:	c30c                	sw	a1,0(a4)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 410:	430c                	lw	a1,0(a4)
+ 412:	00b2e2b3          	or	t0,t0,a1
+ 416:	00572023          	sw	t0,0(a4)
+	wait();
+	RELEASE_SCL;   // SCL HIGH
+ 41a:	00032503          	lw	a0,0(t1)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 41e:	400217b7          	lui	a5,0x40021
+ 422:	0187a303          	lw	t1,24(a5) # 40021018 <__global_pointer$+0x20020800>
+ 426:	4591                	li	a1,4
+ 428:	00a59733          	sll	a4,a1,a0
+ 42c:	00e36333          	or	t1,t1,a4
+ 430:	c632                	sw	a2,12(sp)
+ 432:	c43a                	sw	a4,8(sp)
+ 434:	0ff57293          	zext.b	t0,a0
+ 438:	00136313          	ori	t1,t1,1
+ 43c:	0067ac23          	sw	t1,24(a5)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 440:	00229313          	slli	t1,t0,0x2
+ 444:	969a                	add	a3,a3,t1
+ 446:	4280                	lw	s0,0(a3)
+ 448:	00655693          	srli	a3,a0,0x6
+ 44c:	3fc6f693          	andi	a3,a3,1020
+ 450:	00042303          	lw	t1,0(s0)
+ 454:	44bd                	li	s1,15
+ 456:	00d494b3          	sll	s1,s1,a3
+ 45a:	fff4c493          	not	s1,s1
+ 45e:	00937333          	and	t1,t1,s1
+ 462:	00642023          	sw	t1,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 466:	00042303          	lw	t1,0(s0)
+ 46a:	00d595b3          	sll	a1,a1,a3
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 46e:	07e1                	addi	a5,a5,24
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 470:	0065e5b3          	or	a1,a1,t1
+ 474:	c00c                	sw	a1,0(s0)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 476:	c23e                	sw	a5,4(sp)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 478:	c036                	sw	a3,0(sp)
+	wait();
+	// Clock stretch, wait for SCL to go LOW
+	clk_stretch(i2c->pin_scl);
+ 47a:	3509                	jal	27c <clk_stretch>
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 47c:	4792                	lw	a5,4(sp)
+ 47e:	4722                	lw	a4,8(sp)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 480:	4682                	lw	a3,0(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 482:	438c                	lw	a1,0(a5)
+	ASSERT_SCL;    // SCL LOW
 	
-	// Read ACK bit (0 = ACK, 1 = NACK)
-	if( (stat = master_rx_bit(i2c)) == I2C_NACK) stat = I2C_ERR_NACK;
- 71a:	3e49                	jal	2ac <master_rx_bit.constprop.0>
+	return byte;
+}
+ 484:	4632                	lw	a2,12(sp)
+ 486:	50a2                	lw	ra,40(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 488:	8f4d                	or	a4,a4,a1
+ 48a:	00176713          	ori	a4,a4,1
+ 48e:	c398                	sw	a4,0(a5)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 490:	401c                	lw	a5,0(s0)
+}
+ 492:	8532                	mv	a0,a2
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 494:	8cfd                	and	s1,s1,a5
+ 496:	c004                	sw	s1,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 498:	4018                	lw	a4,0(s0)
+ 49a:	4785                	li	a5,1
+ 49c:	00d797b3          	sll	a5,a5,a3
+ 4a0:	8fd9                	or	a5,a5,a4
+ 4a2:	c01c                	sw	a5,0(s0)
+}
+ 4a4:	5412                	lw	s0,36(sp)
+ 4a6:	5482                	lw	s1,32(sp)
+ 4a8:	02c10113          	addi	sp,sp,44
+ 4ac:	8082                	ret
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 4ae:	00042283          	lw	t0,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 4b2:	00f595b3          	sll	a1,a1,a5
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 4b6:	0072e2b3          	or	t0,t0,t2
+ 4ba:	0012e293          	ori	t0,t0,1
+ 4be:	00542023          	sw	t0,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 4c2:	00072283          	lw	t0,0(a4)
+ 4c6:	00a2f533          	and	a0,t0,a0
+ 4ca:	c308                	sw	a0,0(a4)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 4cc:	4308                	lw	a0,0(a4)
+ 4ce:	8dc9                	or	a1,a1,a0
+ 4d0:	c30c                	sw	a1,0(a4)
+}
+ 4d2:	b7a1                	j	41a <swi2c_master_rx_byte.constprop.0+0x16e>
+
+000004d4 <swi2c_master_tx_byte.constprop.0>:
+i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data)
+ 4d4:	fdc10113          	addi	sp,sp,-36
+ 4d8:	ce22                	sw	s0,28(sp)
+ 4da:	40021437          	lui	s0,0x40021
+ 4de:	d006                	sw	ra,32(sp)
+ 4e0:	cc26                	sw	s1,24(sp)
+ 4e2:	85aa                	mv	a1,a0
+ 4e4:	43a1                	li	t2,8
+ 4e6:	0461                	addi	s0,s0,24 # 40021018 <__global_pointer$+0x20020800>
+		if(data & 0x01) RELEASE_SDA; else ASSERT_SDA;
+ 4e8:	20000337          	lui	t1,0x20000
+ 4ec:	00030793          	mv	a5,t1
+ 4f0:	43dc                	lw	a5,4(a5)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 4f2:	6685                	lui	a3,0x1
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 4f4:	4511                	li	a0,4
+ 4f6:	0ff7f613          	zext.b	a2,a5
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 4fa:	eb868713          	addi	a4,a3,-328 # eb8 <gpio_port_reg>
+ 4fe:	060a                	slli	a2,a2,0x2
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 500:	00f510b3          	sll	ra,a0,a5
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 504:	8399                	srli	a5,a5,0x6
+ 506:	9732                	add	a4,a4,a2
+ 508:	3fc7f793          	andi	a5,a5,1020
+ 50c:	463d                	li	a2,15
+ 50e:	00f61633          	sll	a2,a2,a5
+		if(data & 0x01) RELEASE_SDA; else ASSERT_SDA;
+ 512:	0015f293          	andi	t0,a1,1
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 516:	4318                	lw	a4,0(a4)
+ 518:	fff64613          	not	a2,a2
+ 51c:	00030313          	mv	t1,t1
+ 520:	eb868693          	addi	a3,a3,-328
+		if(data & 0x01) RELEASE_SDA; else ASSERT_SDA;
+ 524:	1a028d63          	beqz	t0,6de <swi2c_master_tx_byte.constprop.0+0x20a>
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 528:	00042283          	lw	t0,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 52c:	00f51533          	sll	a0,a0,a5
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 530:	0012e2b3          	or	t0,t0,ra
+ 534:	0012e293          	ori	t0,t0,1
+ 538:	00542023          	sw	t0,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 53c:	00072283          	lw	t0,0(a4)
+ 540:	00c2f633          	and	a2,t0,a2
+ 544:	c310                	sw	a2,0(a4)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 546:	4310                	lw	a2,0(a4)
+ 548:	8d51                	or	a0,a0,a2
+ 54a:	c308                	sw	a0,0(a4)
+		RELEASE_SCL;   // SCL HIGH
+ 54c:	00032503          	lw	a0,0(t1) # 20000000 <dev>
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 550:	4010                	lw	a2,0(s0)
+ 552:	4491                	li	s1,4
+ 554:	00a49733          	sll	a4,s1,a0
+ 558:	0ff57793          	zext.b	a5,a0
+ 55c:	8e59                	or	a2,a2,a4
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 55e:	078a                	slli	a5,a5,0x2
+ 560:	97b6                	add	a5,a5,a3
+ 562:	ca2e                	sw	a1,20(sp)
+ 564:	c81e                	sw	t2,16(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 566:	c63a                	sw	a4,12(sp)
+ 568:	00166613          	ori	a2,a2,1
+ 56c:	c010                	sw	a2,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 56e:	4390                	lw	a2,0(a5)
+ 570:	00655793          	srli	a5,a0,0x6
+ 574:	3fc7f793          	andi	a5,a5,1020
+ 578:	00062283          	lw	t0,0(a2)
+ 57c:	473d                	li	a4,15
+ 57e:	00f710b3          	sll	ra,a4,a5
+ 582:	fff0c713          	not	a4,ra
+ 586:	00e2f2b3          	and	t0,t0,a4
+ 58a:	00562023          	sw	t0,0(a2)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 58e:	00062083          	lw	ra,0(a2)
+ 592:	00f492b3          	sll	t0,s1,a5
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 596:	c03a                	sw	a4,0(sp)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 598:	0012e2b3          	or	t0,t0,ra
+ 59c:	00562023          	sw	t0,0(a2)
+ 5a0:	c43e                	sw	a5,8(sp)
+ 5a2:	c232                	sw	a2,4(sp)
+		stat = clk_stretch(i2c->pin_scl);
+ 5a4:	39e1                	jal	27c <clk_stretch>
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 5a6:	4732                	lw	a4,12(sp)
+		stat = clk_stretch(i2c->pin_scl);
+ 5a8:	82aa                	mv	t0,a0
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 5aa:	4008                	lw	a0,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 5ac:	4612                	lw	a2,4(sp)
+ 5ae:	4782                	lw	a5,0(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 5b0:	8f49                	or	a4,a4,a0
+ 5b2:	00176713          	ori	a4,a4,1
+ 5b6:	c018                	sw	a4,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 5b8:	4218                	lw	a4,0(a2)
+	while(index--)
+ 5ba:	43c2                	lw	t2,16(sp)
+		data = data << 1;
+ 5bc:	45d2                	lw	a1,20(sp)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 5be:	8f7d                	and	a4,a4,a5
+ 5c0:	c218                	sw	a4,0(a2)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 5c2:	47a2                	lw	a5,8(sp)
+ 5c4:	4208                	lw	a0,0(a2)
+ 5c6:	4705                	li	a4,1
+ 5c8:	00f717b3          	sll	a5,a4,a5
+ 5cc:	8fc9                	or	a5,a5,a0
+ 5ce:	c21c                	sw	a5,0(a2)
+	while(index--)
+ 5d0:	13fd                	addi	t2,t2,-1
+ 5d2:	6785                	lui	a5,0x1
+		data = data << 1;
+ 5d4:	0586                	slli	a1,a1,0x1
+	while(index--)
+ 5d6:	eb878693          	addi	a3,a5,-328 # eb8 <gpio_port_reg>
+ 5da:	0ff3f393          	zext.b	t2,t2
+ 5de:	200007b7          	lui	a5,0x20000
+		data = data << 1;
+ 5e2:	0ff5f593          	zext.b	a1,a1
+	while(index--)
+ 5e6:	00078313          	mv	t1,a5
+ 5ea:	ee039fe3          	bnez	t2,4e8 <swi2c_master_tx_byte.constprop.0+0x14>
+	if(stat == I2C_OK)
+ 5ee:	0e029163          	bnez	t0,6d0 <swi2c_master_tx_byte.constprop.0+0x1fc>
+		RELEASE_SDA;
+ 5f2:	00432783          	lw	a5,4(t1)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 5f6:	4008                	lw	a0,0(s0)
+ 5f8:	ca16                	sw	t0,20(sp)
+ 5fa:	0ff7f613          	zext.b	a2,a5
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 5fe:	060a                	slli	a2,a2,0x2
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 600:	00f495b3          	sll	a1,s1,a5
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 604:	9636                	add	a2,a2,a3
+ 606:	4210                	lw	a2,0(a2)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 608:	8dc9                	or	a1,a1,a0
+ 60a:	0015e593          	ori	a1,a1,1
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 60e:	83a1                	srli	a5,a5,0x8
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 610:	c00c                	sw	a1,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 612:	0ff7f793          	zext.b	a5,a5
+ 616:	00062383          	lw	t2,0(a2)
+ 61a:	00279593          	slli	a1,a5,0x2
+ 61e:	c83e                	sw	a5,16(sp)
+ 620:	47bd                	li	a5,15
+ 622:	00b79533          	sll	a0,a5,a1
+ 626:	fff54513          	not	a0,a0
+ 62a:	00757533          	and	a0,a0,t2
+ 62e:	c208                	sw	a0,0(a2)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 630:	4208                	lw	a0,0(a2)
+ 632:	00b495b3          	sll	a1,s1,a1
+ 636:	c632                	sw	a2,12(sp)
+ 638:	8dc9                	or	a1,a1,a0
+		RELEASE_SCL;
+ 63a:	00032503          	lw	a0,0(t1)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 63e:	c20c                	sw	a1,0(a2)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 640:	00042303          	lw	t1,0(s0)
+ 644:	0ff57393          	zext.b	t2,a0
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 648:	038a                	slli	t2,t2,0x2
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 64a:	00a495b3          	sll	a1,s1,a0
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 64e:	969e                	add	a3,a3,t2
+ 650:	4294                	lw	a3,0(a3)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 652:	00b36333          	or	t1,t1,a1
+ 656:	c42e                	sw	a1,8(sp)
+ 658:	00136313          	ori	t1,t1,1
+ 65c:	00642023          	sw	t1,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 660:	00655313          	srli	t1,a0,0x6
+ 664:	0006a383          	lw	t2,0(a3)
+ 668:	3fc37313          	andi	t1,t1,1020
+ 66c:	00679433          	sll	s0,a5,t1
+ 670:	fff44413          	not	s0,s0
+ 674:	0083f3b3          	and	t2,t2,s0
+ 678:	0076a023          	sw	t2,0(a3)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 67c:	0006a383          	lw	t2,0(a3)
+ 680:	006494b3          	sll	s1,s1,t1
+ 684:	c21a                	sw	t1,4(sp)
+ 686:	0074e4b3          	or	s1,s1,t2
+ 68a:	c284                	sw	s1,0(a3)
+ 68c:	c036                	sw	a3,0(sp)
+		if(clk_stretch(i2c->pin_scl) == I2C_OK)
+ 68e:	36fd                	jal	27c <clk_stretch>
+ 690:	4682                	lw	a3,0(sp)
+ 692:	4312                	lw	t1,4(sp)
+ 694:	45a2                	lw	a1,8(sp)
+ 696:	42d2                	lw	t0,20(sp)
+ 698:	ed01                	bnez	a0,6b0 <swi2c_master_tx_byte.constprop.0+0x1dc>
+	if( (gpio_port_reg[ byte[0] ]->INDR & (0x01 << byte[1])) != 0x00 ) 
+ 69a:	4632                	lw	a2,12(sp)
+ 69c:	47c2                	lw	a5,16(sp)
+ 69e:	4705                	li	a4,1
+ 6a0:	4610                	lw	a2,8(a2)
+ 6a2:	00f71733          	sll	a4,a4,a5
+ 6a6:	8f71                	and	a4,a4,a2
+ 6a8:	00e03733          	snez	a4,a4
+ 6ac:	00171293          	slli	t0,a4,0x1
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 6b0:	400217b7          	lui	a5,0x40021
+ 6b4:	4f98                	lw	a4,24(a5)
+ 6b6:	8dd9                	or	a1,a1,a4
+ 6b8:	0015e593          	ori	a1,a1,1
+ 6bc:	cf8c                	sw	a1,24(a5)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 6be:	429c                	lw	a5,0(a3)
+ 6c0:	8c7d                	and	s0,s0,a5
+ 6c2:	c280                	sw	s0,0(a3)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 6c4:	4298                	lw	a4,0(a3)
+ 6c6:	4785                	li	a5,1
+ 6c8:	006797b3          	sll	a5,a5,t1
+ 6cc:	8fd9                	or	a5,a5,a4
+ 6ce:	c29c                	sw	a5,0(a3)
+}
+ 6d0:	5082                	lw	ra,32(sp)
+ 6d2:	4472                	lw	s0,28(sp)
+ 6d4:	44e2                	lw	s1,24(sp)
+ 6d6:	8516                	mv	a0,t0
+ 6d8:	02410113          	addi	sp,sp,36
+ 6dc:	8082                	ret
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 6de:	4008                	lw	a0,0(s0)
+ 6e0:	00156533          	or	a0,a0,ra
+ 6e4:	00156513          	ori	a0,a0,1
+ 6e8:	c008                	sw	a0,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 6ea:	4308                	lw	a0,0(a4)
+ 6ec:	8e69                	and	a2,a2,a0
+ 6ee:	c310                	sw	a2,0(a4)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 6f0:	4308                	lw	a0,0(a4)
+ 6f2:	4605                	li	a2,1
+ 6f4:	00f617b3          	sll	a5,a2,a5
+ 6f8:	8fc9                	or	a5,a5,a0
+ 6fa:	c31c                	sw	a5,0(a4)
+}
+ 6fc:	bd81                	j	54c <swi2c_master_tx_byte.constprop.0+0x78>
+
+000006fe <swi2c_start.constprop.0>:
+i2c_err_t swi2c_start(i2c_device_t *i2c)
+ 6fe:	1151                	addi	sp,sp,-12
+ 700:	c222                	sw	s0,4(sp)
+		RELEASE_SDA;    // SDA HIGH
+ 702:	20000437          	lui	s0,0x20000
+ 706:	00040593          	mv	a1,s0
+ 70a:	41d4                	lw	a3,4(a1)
+i2c_err_t swi2c_start(i2c_device_t *i2c)
+ 70c:	c026                	sw	s1,0(sp)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 70e:	6485                	lui	s1,0x1
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 710:	0ff6f713          	zext.b	a4,a3
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 714:	eb848793          	addi	a5,s1,-328 # eb8 <gpio_port_reg>
+ 718:	00271613          	slli	a2,a4,0x2
+ 71c:	97b2                	add	a5,a5,a2
+ 71e:	4390                	lw	a2,0(a5)
+	if(i2c->_active)
+ 720:	0105c783          	lbu	a5,16(a1)
+i2c_err_t swi2c_start(i2c_device_t *i2c)
+ 724:	c406                	sw	ra,8(sp)
+ 726:	00040413          	mv	s0,s0
+ 72a:	eb848493          	addi	s1,s1,-328
+	if(i2c->_active)
+ 72e:	efc9                	bnez	a5,7c8 <swi2c_start.constprop.0+0xca>
+	ASSERT_SDA;        // SDA LOW
+ 730:	405c                	lw	a5,4(s0)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 732:	400215b7          	lui	a1,0x40021
+ 736:	4d88                	lw	a0,24(a1)
+ 738:	0ff7f713          	zext.b	a4,a5
+ 73c:	4611                	li	a2,4
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 73e:	070a                	slli	a4,a4,0x2
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 740:	00f616b3          	sll	a3,a2,a5
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 744:	9726                	add	a4,a4,s1
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 746:	8ec9                	or	a3,a3,a0
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 748:	4308                	lw	a0,0(a4)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 74a:	0016e693          	ori	a3,a3,1
+ 74e:	cd94                	sw	a3,24(a1)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 750:	8399                	srli	a5,a5,0x6
+ 752:	00052303          	lw	t1,0(a0)
+ 756:	3fc7f793          	andi	a5,a5,1020
+ 75a:	473d                	li	a4,15
+ 75c:	00f716b3          	sll	a3,a4,a5
+ 760:	fff6c693          	not	a3,a3
+ 764:	0066f6b3          	and	a3,a3,t1
+ 768:	c114                	sw	a3,0(a0)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 76a:	00052303          	lw	t1,0(a0)
+ 76e:	4685                	li	a3,1
+ 770:	00f697b3          	sll	a5,a3,a5
+ 774:	0067e7b3          	or	a5,a5,t1
+ 778:	c11c                	sw	a5,0(a0)
+	ASSERT_SCL;        // SCL LOW
+ 77a:	401c                	lw	a5,0(s0)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 77c:	0185a303          	lw	t1,24(a1) # 40021018 <__global_pointer$+0x20020800>
+ 780:	00f61633          	sll	a2,a2,a5
+ 784:	00666633          	or	a2,a2,t1
+ 788:	0ff7f513          	zext.b	a0,a5
+ 78c:	00166613          	ori	a2,a2,1
+ 790:	cd90                	sw	a2,24(a1)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 792:	00251613          	slli	a2,a0,0x2
+ 796:	9626                	add	a2,a2,s1
+ 798:	4210                	lw	a2,0(a2)
+ 79a:	8399                	srli	a5,a5,0x6
+ 79c:	3fc7f793          	andi	a5,a5,1020
+ 7a0:	420c                	lw	a1,0(a2)
+ 7a2:	00f71733          	sll	a4,a4,a5
+ 7a6:	fff74713          	not	a4,a4
+ 7aa:	8f6d                	and	a4,a4,a1
+ 7ac:	c218                	sw	a4,0(a2)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 7ae:	4218                	lw	a4,0(a2)
+ 7b0:	00f697b3          	sll	a5,a3,a5
 	return stat;
-}
- 71c:	40a2                	lw	ra,8(sp)
- 71e:	4412                	lw	s0,4(sp)
- 720:	4482                	lw	s1,0(sp)
- 722:	0506                	slli	a0,a0,0x1
- 724:	0131                	addi	sp,sp,12
- 726:	8082                	ret
-
-00000728 <swi2c_stop.constprop.0.isra.0>:
-	ASSERT_SDA;     // SDA LOW 
- 728:	200002b7          	lui	t0,0x20000
-i2c_err_t swi2c_stop(i2c_device_t *i2c)
- 72c:	1121                	addi	sp,sp,-24
-	ASSERT_SDA;     // SDA LOW 
- 72e:	00028293          	mv	t0,t0
-i2c_err_t swi2c_stop(i2c_device_t *i2c)
- 732:	c822                	sw	s0,16(sp)
-	ASSERT_SDA;     // SDA LOW 
- 734:	0042a403          	lw	s0,4(t0) # 20000004 <dev+0x4>
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 738:	40021737          	lui	a4,0x40021
- 73c:	4f10                	lw	a2,24(a4)
- 73e:	0ff47693          	zext.b	a3,s0
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 742:	6305                	lui	t1,0x1
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 744:	4791                	li	a5,4
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 746:	ccc30313          	addi	t1,t1,-820 # ccc <gpio_port_reg>
- 74a:	068a                	slli	a3,a3,0x2
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 74c:	008795b3          	sll	a1,a5,s0
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 750:	969a                	add	a3,a3,t1
-i2c_err_t swi2c_stop(i2c_device_t *i2c)
- 752:	c626                	sw	s1,12(sp)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 754:	8e4d                	or	a2,a2,a1
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 756:	4284                	lw	s1,0(a3)
-i2c_err_t swi2c_stop(i2c_device_t *i2c)
- 758:	ca06                	sw	ra,20(sp)
-	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 75a:	c02e                	sw	a1,0(sp)
- 75c:	00166613          	ori	a2,a2,1
- 760:	cf10                	sw	a2,24(a4)
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 762:	8019                	srli	s0,s0,0x6
- 764:	4088                	lw	a0,0(s1)
- 766:	3fc47413          	andi	s0,s0,1020
- 76a:	46bd                	li	a3,15
- 76c:	00869633          	sll	a2,a3,s0
- 770:	fff64613          	not	a2,a2
- 774:	8d71                	and	a0,a0,a2
- 776:	c088                	sw	a0,0(s1)
+ 7b4:	4501                	li	a0,0
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 778:	0004a383          	lw	t2,0(s1)
- 77c:	4505                	li	a0,1
- 77e:	00851533          	sll	a0,a0,s0
- 782:	00756533          	or	a0,a0,t2
- 786:	c088                	sw	a0,0(s1)
+ 7b6:	8fd9                	or	a5,a5,a4
+ 7b8:	c21c                	sw	a5,0(a2)
+	i2c->_active = true;
+ 7ba:	00d40823          	sb	a3,16(s0) # 20000010 <dev+0x10>
+}
+ 7be:	40a2                	lw	ra,8(sp)
+ 7c0:	4412                	lw	s0,4(sp)
+ 7c2:	4482                	lw	s1,0(sp)
+ 7c4:	0131                	addi	sp,sp,12
+ 7c6:	8082                	ret
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 7c8:	400215b7          	lui	a1,0x40021
+ 7cc:	4d88                	lw	a0,24(a1)
+ 7ce:	4791                	li	a5,4
+ 7d0:	00e79733          	sll	a4,a5,a4
+ 7d4:	8f49                	or	a4,a4,a0
+ 7d6:	00176713          	ori	a4,a4,1
+ 7da:	cd98                	sw	a4,24(a1)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 7dc:	8299                	srli	a3,a3,0x6
+ 7de:	00062303          	lw	t1,0(a2)
+ 7e2:	3fc6f693          	andi	a3,a3,1020
+ 7e6:	473d                	li	a4,15
+ 7e8:	00d71533          	sll	a0,a4,a3
+ 7ec:	fff54513          	not	a0,a0
+ 7f0:	00657533          	and	a0,a0,t1
+ 7f4:	c208                	sw	a0,0(a2)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 7f6:	4208                	lw	a0,0(a2)
+ 7f8:	00d796b3          	sll	a3,a5,a3
+ 7fc:	8ec9                	or	a3,a3,a0
+		RELEASE_SCL;    // SCL HIGH
+ 7fe:	4008                	lw	a0,0(s0)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 800:	c214                	sw	a3,0(a2)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 802:	0185a303          	lw	t1,24(a1) # 40021018 <__global_pointer$+0x20020800>
+ 806:	0ff57693          	zext.b	a3,a0
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 80a:	068a                	slli	a3,a3,0x2
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 80c:	00a79633          	sll	a2,a5,a0
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 810:	96a6                	add	a3,a3,s1
+ 812:	4294                	lw	a3,0(a3)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 814:	00666633          	or	a2,a2,t1
+ 818:	00166613          	ori	a2,a2,1
+ 81c:	cd90                	sw	a2,24(a1)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 81e:	00655613          	srli	a2,a0,0x6
+ 822:	428c                	lw	a1,0(a3)
+ 824:	3fc67613          	andi	a2,a2,1020
+ 828:	00c71733          	sll	a4,a4,a2
+ 82c:	fff74713          	not	a4,a4
+ 830:	8f6d                	and	a4,a4,a1
+ 832:	c298                	sw	a4,0(a3)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 834:	4298                	lw	a4,0(a3)
+ 836:	00c797b3          	sll	a5,a5,a2
+ 83a:	8fd9                	or	a5,a5,a4
+ 83c:	c29c                	sw	a5,0(a3)
+		if( (stat = clk_stretch(i2c->pin_scl)) != I2C_OK) return stat;
+ 83e:	3c3d                	jal	27c <clk_stretch>
+ 840:	ee0508e3          	beqz	a0,730 <swi2c_start.constprop.0+0x32>
+ 844:	bfad                	j	7be <swi2c_start.constprop.0+0xc0>
+
+00000846 <internal_handle_input.constprop.0>:
+ 846:	e00007b7          	lui	a5,0xe0000
+ 84a:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8dc>
+ 84e:	439c                	lw	a5,0(a5)
+ 850:	8082                	ret
+
+00000852 <_write.constprop.0>:
+ 852:	1101                	addi	sp,sp,-32
+ 854:	cc22                	sw	s0,24(sp)
+ 856:	ce06                	sw	ra,28(sp)
+ 858:	ca26                	sw	s1,20(sp)
+ 85a:	c02a                	sw	a0,0(sp)
+ 85c:	c802                	sw	zero,16(sp)
+ 85e:	842e                	mv	s0,a1
+ 860:	e1f9                	bnez	a1,926 <_write.constprop.0+0xd4>
+ 862:	e00007b7          	lui	a5,0xe0000
+ 866:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8dc>
+ 86a:	439c                	lw	a5,0(a5)
+ 86c:	c789                	beqz	a5,876 <_write.constprop.0+0x24>
+ 86e:	0807f793          	andi	a5,a5,128
+ 872:	e391                	bnez	a5,876 <_write.constprop.0+0x24>
+ 874:	3fc9                	jal	846 <internal_handle_input.constprop.0>
+ 876:	40f2                	lw	ra,28(sp)
+ 878:	8522                	mv	a0,s0
+ 87a:	4462                	lw	s0,24(sp)
+ 87c:	44d2                	lw	s1,20(sp)
+ 87e:	6105                	addi	sp,sp,32
+ 880:	8082                	ret
+ 882:	409406b3          	sub	a3,s0,s1
+ 886:	461d                	li	a2,7
+ 888:	8736                	mv	a4,a3
+ 88a:	00d65363          	bge	a2,a3,890 <_write.constprop.0+0x3e>
+ 88e:	471d                	li	a4,7
+ 890:	00027637          	lui	a2,0x27
+ 894:	10160613          	addi	a2,a2,257 # 27101 <lib_swi2c.c.a2b53af0+0x248ab>
+ 898:	00032583          	lw	a1,0(t1)
+ 89c:	0805f513          	andi	a0,a1,128
+ 8a0:	ed3d                	bnez	a0,91e <_write.constprop.0+0xcc>
+ 8a2:	c981                	beqz	a1,8b2 <_write.constprop.0+0x60>
+ 8a4:	c61a                	sw	t1,12(sp)
+ 8a6:	c43a                	sw	a4,8(sp)
+ 8a8:	c236                	sw	a3,4(sp)
+ 8aa:	3f71                	jal	846 <internal_handle_input.constprop.0>
+ 8ac:	4332                	lw	t1,12(sp)
+ 8ae:	4722                	lw	a4,8(sp)
+ 8b0:	4692                	lw	a3,4(sp)
+ 8b2:	0036a693          	slti	a3,a3,3
+ 8b6:	4601                	li	a2,0
+ 8b8:	e299                	bnez	a3,8be <_write.constprop.0+0x6c>
+ 8ba:	ffd70613          	addi	a2,a4,-3
+ 8be:	4782                	lw	a5,0(sp)
+ 8c0:	00348593          	addi	a1,s1,3
+ 8c4:	0808                	addi	a0,sp,16
+ 8c6:	95be                	add	a1,a1,a5
+ 8c8:	c41a                	sw	t1,8(sp)
+ 8ca:	c23a                	sw	a4,4(sp)
+ 8cc:	2101                	jal	ccc <memcpy>
+ 8ce:	4642                	lw	a2,16(sp)
+ 8d0:	4782                	lw	a5,0(sp)
+ 8d2:	e00006b7          	lui	a3,0xe0000
+ 8d6:	4322                	lw	t1,8(sp)
+ 8d8:	4712                	lw	a4,4(sp)
+ 8da:	0f868693          	addi	a3,a3,248 # e00000f8 <__global_pointer$+0xbffff8e0>
+ 8de:	c290                	sw	a2,0(a3)
+ 8e0:	458d                	li	a1,3
+ 8e2:	00978633          	add	a2,a5,s1
+ 8e6:	4681                	li	a3,0
+ 8e8:	00064283          	lbu	t0,0(a2)
+ 8ec:	0685                	addi	a3,a3,1
+ 8ee:	01068793          	addi	a5,a3,16
+ 8f2:	00278533          	add	a0,a5,sp
+ 8f6:	00550023          	sb	t0,0(a0)
+ 8fa:	00d70563          	beq	a4,a3,904 <_write.constprop.0+0xb2>
+ 8fe:	0605                	addi	a2,a2,1
+ 900:	feb694e3          	bne	a3,a1,8e8 <_write.constprop.0+0x96>
+ 904:	00470693          	addi	a3,a4,4
+ 908:	f806e693          	ori	a3,a3,-128
+ 90c:	00d10823          	sb	a3,16(sp)
+ 910:	46c2                	lw	a3,16(sp)
+ 912:	94ba                	add	s1,s1,a4
+ 914:	00d32023          	sw	a3,0(t1)
+ 918:	f684c5e3          	blt	s1,s0,882 <_write.constprop.0+0x30>
+ 91c:	bfa9                	j	876 <_write.constprop.0+0x24>
+ 91e:	167d                	addi	a2,a2,-1
+ 920:	fe25                	bnez	a2,898 <_write.constprop.0+0x46>
+ 922:	8426                	mv	s0,s1
+ 924:	bf89                	j	876 <_write.constprop.0+0x24>
+ 926:	e0000337          	lui	t1,0xe0000
+ 92a:	4481                	li	s1,0
+ 92c:	0f430313          	addi	t1,t1,244 # e00000f4 <__global_pointer$+0xbffff8dc>
+ 930:	b7e5                	j	918 <_write.constprop.0+0xc6>
+
+00000932 <__puts_uart>:
+ 932:	1151                	addi	sp,sp,-12
+ 934:	c222                	sw	s0,4(sp)
+ 936:	c406                	sw	ra,8(sp)
+ 938:	842e                	mv	s0,a1
+ 93a:	3f21                	jal	852 <_write.constprop.0>
+ 93c:	40a2                	lw	ra,8(sp)
+ 93e:	8522                	mv	a0,s0
+ 940:	4412                	lw	s0,4(sp)
+ 942:	0131                	addi	sp,sp,12
+ 944:	8082                	ret
+
+00000946 <swi2c_stop.constprop.0.isra.0>:
+	ASSERT_SDA;     // SDA LOW 
+ 946:	200002b7          	lui	t0,0x20000
+i2c_err_t swi2c_stop(i2c_device_t *i2c)
+ 94a:	1121                	addi	sp,sp,-24
+	ASSERT_SDA;     // SDA LOW 
+ 94c:	00028293          	mv	t0,t0
+i2c_err_t swi2c_stop(i2c_device_t *i2c)
+ 950:	c822                	sw	s0,16(sp)
+	ASSERT_SDA;     // SDA LOW 
+ 952:	0042a403          	lw	s0,4(t0) # 20000004 <dev+0x4>
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 956:	40021737          	lui	a4,0x40021
+ 95a:	4f10                	lw	a2,24(a4)
+ 95c:	0ff47693          	zext.b	a3,s0
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 960:	6305                	lui	t1,0x1
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 962:	4791                	li	a5,4
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 964:	eb830313          	addi	t1,t1,-328 # eb8 <gpio_port_reg>
+ 968:	068a                	slli	a3,a3,0x2
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 96a:	008795b3          	sll	a1,a5,s0
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 96e:	969a                	add	a3,a3,t1
+i2c_err_t swi2c_stop(i2c_device_t *i2c)
+ 970:	c626                	sw	s1,12(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 972:	8e4d                	or	a2,a2,a1
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 974:	4284                	lw	s1,0(a3)
+i2c_err_t swi2c_stop(i2c_device_t *i2c)
+ 976:	ca06                	sw	ra,20(sp)
+	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
+ 978:	c02e                	sw	a1,0(sp)
+ 97a:	00166613          	ori	a2,a2,1
+ 97e:	cf10                	sw	a2,24(a4)
+	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+ 980:	8019                	srli	s0,s0,0x6
+ 982:	4088                	lw	a0,0(s1)
+ 984:	3fc47413          	andi	s0,s0,1020
+ 988:	46bd                	li	a3,15
+ 98a:	00869633          	sll	a2,a3,s0
+ 98e:	fff64613          	not	a2,a2
+ 992:	8d71                	and	a0,a0,a2
+ 994:	c088                	sw	a0,0(s1)
+	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+ 996:	0004a383          	lw	t2,0(s1)
+ 99a:	4505                	li	a0,1
+ 99c:	00851533          	sll	a0,a0,s0
+ 9a0:	00756533          	or	a0,a0,t2
+ 9a4:	c088                	sw	a0,0(s1)
 	RELEASE_SCL;    // SCL HIGH
- 788:	0002a503          	lw	a0,0(t0)
+ 9a6:	0002a503          	lw	a0,0(t0)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 78c:	01872083          	lw	ra,24(a4) # 40021018 <__global_pointer$+0x20020800>
+ 9aa:	01872083          	lw	ra,24(a4) # 40021018 <__global_pointer$+0x20020800>
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 790:	c432                	sw	a2,8(sp)
+ 9ae:	c432                	sw	a2,8(sp)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 792:	00a793b3          	sll	t2,a5,a0
- 796:	0013e3b3          	or	t2,t2,ra
- 79a:	0ff57593          	zext.b	a1,a0
- 79e:	0013e393          	ori	t2,t2,1
- 7a2:	00772c23          	sw	t2,24(a4)
+ 9b0:	00a793b3          	sll	t2,a5,a0
+ 9b4:	0013e3b3          	or	t2,t2,ra
+ 9b8:	0ff57593          	zext.b	a1,a0
+ 9bc:	0013e393          	ori	t2,t2,1
+ 9c0:	00772c23          	sw	t2,24(a4)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 7a6:	00259393          	slli	t2,a1,0x2
- 7aa:	931e                	add	t1,t1,t2
- 7ac:	00032383          	lw	t2,0(t1)
- 7b0:	00655313          	srli	t1,a0,0x6
- 7b4:	3fc37313          	andi	t1,t1,1020
- 7b8:	0003a083          	lw	ra,0(t2)
- 7bc:	006696b3          	sll	a3,a3,t1
- 7c0:	fff6c693          	not	a3,a3
- 7c4:	0016f6b3          	and	a3,a3,ra
- 7c8:	00d3a023          	sw	a3,0(t2)
+ 9c4:	00259393          	slli	t2,a1,0x2
+ 9c8:	931e                	add	t1,t1,t2
+ 9ca:	00032383          	lw	t2,0(t1)
+ 9ce:	00655313          	srli	t1,a0,0x6
+ 9d2:	3fc37313          	andi	t1,t1,1020
+ 9d6:	0003a083          	lw	ra,0(t2)
+ 9da:	006696b3          	sll	a3,a3,t1
+ 9de:	fff6c693          	not	a3,a3
+ 9e2:	0016f6b3          	and	a3,a3,ra
+ 9e6:	00d3a023          	sw	a3,0(t2)
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 7cc:	0003a683          	lw	a3,0(t2)
- 7d0:	00679333          	sll	t1,a5,t1
+ 9ea:	0003a683          	lw	a3,0(t2)
+ 9ee:	00679333          	sll	t1,a5,t1
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 7d4:	0761                	addi	a4,a4,24
+ 9f2:	0761                	addi	a4,a4,24
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 7d6:	00d36333          	or	t1,t1,a3
- 7da:	0063a023          	sw	t1,0(t2)
+ 9f4:	00d36333          	or	t1,t1,a3
+ 9f8:	0063a023          	sw	t1,0(t2)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 7de:	c23a                	sw	a4,4(sp)
+ 9fc:	c23a                	sw	a4,4(sp)
 	stat = clk_stretch(i2c->pin_scl);
- 7e0:	3c71                	jal	27c <clk_stretch>
+ 9fe:	38bd                	jal	27c <clk_stretch>
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 7e2:	4712                	lw	a4,4(sp)
- 7e4:	4782                	lw	a5,0(sp)
+ a00:	4712                	lw	a4,4(sp)
+ a02:	4782                	lw	a5,0(sp)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 7e6:	4622                	lw	a2,8(sp)
+ a04:	4622                	lw	a2,8(sp)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 7e8:	4314                	lw	a3,0(a4)
+ a06:	4314                	lw	a3,0(a4)
 }
- 7ea:	40d2                	lw	ra,20(sp)
+ a08:	40d2                	lw	ra,20(sp)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- 7ec:	00d7e5b3          	or	a1,a5,a3
- 7f0:	0015e593          	ori	a1,a1,1
- 7f4:	c30c                	sw	a1,0(a4)
+ a0a:	00d7e5b3          	or	a1,a5,a3
+ a0e:	0015e593          	ori	a1,a1,1
+ a12:	c30c                	sw	a1,0(a4)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 7f6:	4098                	lw	a4,0(s1)
+ a14:	4098                	lw	a4,0(s1)
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 7f8:	4791                	li	a5,4
- 7fa:	008797b3          	sll	a5,a5,s0
+ a16:	4791                	li	a5,4
+ a18:	008797b3          	sll	a5,a5,s0
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 7fe:	8e79                	and	a2,a2,a4
- 800:	c090                	sw	a2,0(s1)
+ a1c:	8e79                	and	a2,a2,a4
+ a1e:	c090                	sw	a2,0(s1)
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 802:	4098                	lw	a4,0(s1)
+ a20:	4098                	lw	a4,0(s1)
 }
- 804:	4442                	lw	s0,16(sp)
+ a22:	4442                	lw	s0,16(sp)
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- 806:	8fd9                	or	a5,a5,a4
- 808:	c09c                	sw	a5,0(s1)
+ a24:	8fd9                	or	a5,a5,a4
+ a26:	c09c                	sw	a5,0(s1)
 	i2c->_active = false;
- 80a:	200007b7          	lui	a5,0x20000
- 80e:	00078293          	mv	t0,a5
- 812:	00028823          	sb	zero,16(t0)
+ a28:	200007b7          	lui	a5,0x20000
+ a2c:	00078293          	mv	t0,a5
+ a30:	00028823          	sb	zero,16(t0)
 }
- 816:	44b2                	lw	s1,12(sp)
- 818:	0161                	addi	sp,sp,24
- 81a:	8082                	ret
+ a34:	44b2                	lw	s1,12(sp)
+ a36:	0161                	addi	sp,sp,24
+ a38:	8082                	ret
 
-0000081c <handle_reset>:
- 81c:	20000197          	auipc	gp,0x20000
- 820:	ffc18193          	addi	gp,gp,-4 # 20000818 <__global_pointer$>
- 824:	fe818113          	addi	sp,gp,-24 # 20000800 <_eusrstack>
- 828:	08000513          	li	a0,128
- 82c:	30051073          	csrw	mstatus,a0
- 830:	468d                	li	a3,3
- 832:	fffff517          	auipc	a0,0xfffff
- 836:	7ce50513          	addi	a0,a0,1998 # 0 <InterruptVector>
- 83a:	8d55                	or	a0,a0,a3
- 83c:	30551073          	csrw	mtvec,a0
- 840:	1ffff517          	auipc	a0,0x1ffff
- 844:	7d850513          	addi	a0,a0,2008 # 20000018 <data>
- 848:	80c18593          	addi	a1,gp,-2036 # 20000024 <_ebss>
- 84c:	4601                	li	a2,0
- 84e:	00b55663          	bge	a0,a1,85a <handle_reset+0x3e>
- 852:	c110                	sw	a2,0(a0)
- 854:	0511                	addi	a0,a0,4
- 856:	feb54ee3          	blt	a0,a1,852 <handle_reset+0x36>
- 85a:	00000517          	auipc	a0,0x0
- 85e:	48250513          	addi	a0,a0,1154 # cdc <_data_lma>
- 862:	1ffff597          	auipc	a1,0x1ffff
- 866:	79e58593          	addi	a1,a1,1950 # 20000000 <dev>
- 86a:	1ffff617          	auipc	a2,0x1ffff
- 86e:	7ae60613          	addi	a2,a2,1966 # 20000018 <data>
- 872:	00c58863          	beq	a1,a2,882 <handle_reset+0x66>
- 876:	4114                	lw	a3,0(a0)
- 878:	c194                	sw	a3,0(a1)
- 87a:	0511                	addi	a0,a0,4
- 87c:	0591                	addi	a1,a1,4
- 87e:	fec59ae3          	bne	a1,a2,872 <handle_reset+0x56>
- 882:	e000f7b7          	lui	a5,0xe000f
- 886:	4715                	li	a4,5
- 888:	c398                	sw	a4,0(a5)
- 88a:	6785                	lui	a5,0x1
- 88c:	b2a78793          	addi	a5,a5,-1238 # b2a <main>
- 890:	34179073          	csrw	mepc,a5
- 894:	30200073          	mret
+00000a3a <handle_reset>:
+ a3a:	20000197          	auipc	gp,0x20000
+ a3e:	dde18193          	addi	gp,gp,-546 # 20000818 <__global_pointer$>
+ a42:	fe818113          	addi	sp,gp,-24 # 20000800 <_eusrstack>
+ a46:	08000513          	li	a0,128
+ a4a:	30051073          	csrw	mstatus,a0
+ a4e:	468d                	li	a3,3
+ a50:	fffff517          	auipc	a0,0xfffff
+ a54:	5b050513          	addi	a0,a0,1456 # 0 <InterruptVector>
+ a58:	8d55                	or	a0,a0,a3
+ a5a:	30551073          	csrw	mtvec,a0
+ a5e:	1ffff517          	auipc	a0,0x1ffff
+ a62:	5ba50513          	addi	a0,a0,1466 # 20000018 <data>
+ a66:	80c18593          	addi	a1,gp,-2036 # 20000024 <_ebss>
+ a6a:	4601                	li	a2,0
+ a6c:	00b55663          	bge	a0,a1,a78 <handle_reset+0x3e>
+ a70:	c110                	sw	a2,0(a0)
+ a72:	0511                	addi	a0,a0,4
+ a74:	feb54ee3          	blt	a0,a1,a70 <handle_reset+0x36>
+ a78:	00000517          	auipc	a0,0x0
+ a7c:	45050513          	addi	a0,a0,1104 # ec8 <_data_lma>
+ a80:	1ffff597          	auipc	a1,0x1ffff
+ a84:	58058593          	addi	a1,a1,1408 # 20000000 <dev>
+ a88:	1ffff617          	auipc	a2,0x1ffff
+ a8c:	59060613          	addi	a2,a2,1424 # 20000018 <data>
+ a90:	00c58863          	beq	a1,a2,aa0 <handle_reset+0x66>
+ a94:	4114                	lw	a3,0(a0)
+ a96:	c194                	sw	a3,0(a1)
+ a98:	0511                	addi	a0,a0,4
+ a9a:	0591                	addi	a1,a1,4
+ a9c:	fec59ae3          	bne	a1,a2,a90 <handle_reset+0x56>
+ aa0:	e000f7b7          	lui	a5,0xe000f
+ aa4:	4715                	li	a4,5
+ aa6:	c398                	sw	a4,0(a5)
+ aa8:	6785                	lui	a5,0x1
+ aaa:	d4a78793          	addi	a5,a5,-694 # d4a <main>
+ aae:	34179073          	csrw	mepc,a5
+ ab2:	30200073          	mret
 
-00000898 <ADC1_IRQHandler>:
- 898:	a001                	j	898 <ADC1_IRQHandler>
+00000ab6 <ADC1_IRQHandler>:
+ ab6:	a001                	j	ab6 <ADC1_IRQHandler>
 
-0000089a <NMI_Handler>:
- 89a:	40021737          	lui	a4,0x40021
- 89e:	471c                	lw	a5,8(a4)
- 8a0:	008006b7          	lui	a3,0x800
- 8a4:	8fd5                	or	a5,a5,a3
- 8a6:	c71c                	sw	a5,8(a4)
+00000ab8 <NMI_Handler>:
+ ab8:	40021737          	lui	a4,0x40021
+ abc:	471c                	lw	a5,8(a4)
+ abe:	008006b7          	lui	a3,0x800
+ ac2:	8fd5                	or	a5,a5,a3
+ ac4:	c71c                	sw	a5,8(a4)
 
-000008a8 <strlen>:
- 8a8:	87aa                	mv	a5,a0
- 8aa:	0007c703          	lbu	a4,0(a5)
- 8ae:	e701                	bnez	a4,8b6 <strlen+0xe>
- 8b0:	40a78533          	sub	a0,a5,a0
- 8b4:	8082                	ret
- 8b6:	0785                	addi	a5,a5,1
- 8b8:	bfcd                	j	8aa <strlen+0x2>
+00000ac6 <strlen>:
+ ac6:	87aa                	mv	a5,a0
+ ac8:	0007c703          	lbu	a4,0(a5)
+ acc:	e701                	bnez	a4,ad4 <strlen+0xe>
+ ace:	40a78533          	sub	a0,a5,a0
+ ad2:	8082                	ret
+ ad4:	0785                	addi	a5,a5,1
+ ad6:	bfcd                	j	ac8 <strlen+0x2>
 
-000008ba <mini_vpprintf>:
- 8ba:	fa410113          	addi	sp,sp,-92
- 8be:	caa2                	sw	s0,84(sp)
- 8c0:	c8a6                	sw	s1,80(sp)
- 8c2:	cc86                	sw	ra,88(sp)
- 8c4:	c02a                	sw	a0,0(sp)
- 8c6:	c22e                	sw	a1,4(sp)
- 8c8:	8432                	mv	s0,a2
- 8ca:	84b6                	mv	s1,a3
- 8cc:	ca02                	sw	zero,20(sp)
- 8ce:	00044783          	lbu	a5,0(s0)
- 8d2:	00140693          	addi	a3,s0,1
- 8d6:	00f10fa3          	sb	a5,31(sp)
- 8da:	eb81                	bnez	a5,8ea <mini_vpprintf+0x30>
- 8dc:	40e6                	lw	ra,88(sp)
- 8de:	4456                	lw	s0,84(sp)
- 8e0:	4552                	lw	a0,20(sp)
- 8e2:	44c6                	lw	s1,80(sp)
- 8e4:	05c10113          	addi	sp,sp,92
- 8e8:	8082                	ret
- 8ea:	c636                	sw	a3,12(sp)
- 8ec:	02500713          	li	a4,37
- 8f0:	02e78063          	beq	a5,a4,910 <mini_vpprintf+0x56>
- 8f4:	4612                	lw	a2,4(sp)
- 8f6:	4782                	lw	a5,0(sp)
- 8f8:	4585                	li	a1,1
- 8fa:	01f10513          	addi	a0,sp,31
- 8fe:	9782                	jalr	a5
- 900:	46b2                	lw	a3,12(sp)
- 902:	c426                	sw	s1,8(sp)
- 904:	8436                	mv	s0,a3
- 906:	47d2                	lw	a5,20(sp)
- 908:	44a2                	lw	s1,8(sp)
- 90a:	97aa                	add	a5,a5,a0
- 90c:	ca3e                	sw	a5,20(sp)
- 90e:	b7c1                	j	8ce <mini_vpprintf+0x14>
- 910:	00144703          	lbu	a4,1(s0)
- 914:	03000613          	li	a2,48
- 918:	03000693          	li	a3,48
- 91c:	00e10fa3          	sb	a4,31(sp)
- 920:	c632                	sw	a2,12(sp)
- 922:	00240793          	addi	a5,s0,2
- 926:	08d71263          	bne	a4,a3,9aa <mini_vpprintf+0xf0>
- 92a:	843e                	mv	s0,a5
- 92c:	4681                	li	a3,0
- 92e:	4781                	li	a5,0
- 930:	45a5                	li	a1,9
- 932:	a811                	j	946 <mini_vpprintf+0x8c>
- 934:	00279713          	slli	a4,a5,0x2
- 938:	0405                	addi	s0,s0,1
- 93a:	97ba                	add	a5,a5,a4
- 93c:	fff44703          	lbu	a4,-1(s0)
- 940:	0786                	slli	a5,a5,0x1
- 942:	97b2                	add	a5,a5,a2
- 944:	4685                	li	a3,1
- 946:	fd070613          	addi	a2,a4,-48 # 40020fd0 <__global_pointer$+0x200207b8>
- 94a:	0ff67513          	zext.b	a0,a2
- 94e:	fea5f3e3          	bgeu	a1,a0,934 <mini_vpprintf+0x7a>
- 952:	c299                	beqz	a3,958 <mini_vpprintf+0x9e>
- 954:	00e10fa3          	sb	a4,31(sp)
- 958:	c83e                	sw	a5,16(sp)
- 95a:	46e1                	li	a3,24
- 95c:	00f6d363          	bge	a3,a5,962 <mini_vpprintf+0xa8>
- 960:	c836                	sw	a3,16(sp)
- 962:	06c00613          	li	a2,108
- 966:	4681                	li	a3,0
- 968:	00c71863          	bne	a4,a2,978 <mini_vpprintf+0xbe>
- 96c:	00044703          	lbu	a4,0(s0)
- 970:	4685                	li	a3,1
- 972:	0405                	addi	s0,s0,1
- 974:	00e10fa3          	sb	a4,31(sp)
- 978:	01f14603          	lbu	a2,31(sp)
- 97c:	06400713          	li	a4,100
- 980:	06e60563          	beq	a2,a4,9ea <mini_vpprintf+0x130>
- 984:	02c76763          	bltu	a4,a2,9b2 <mini_vpprintf+0xf8>
- 988:	05800793          	li	a5,88
- 98c:	0af60263          	beq	a2,a5,a30 <mini_vpprintf+0x176>
- 990:	06300793          	li	a5,99
- 994:	0cf60063          	beq	a2,a5,a54 <mini_vpprintf+0x19a>
- 998:	d231                	beqz	a2,8dc <mini_vpprintf+0x22>
- 99a:	4612                	lw	a2,4(sp)
- 99c:	4782                	lw	a5,0(sp)
- 99e:	4585                	li	a1,1
- 9a0:	01f10513          	addi	a0,sp,31
- 9a4:	9782                	jalr	a5
- 9a6:	c426                	sw	s1,8(sp)
- 9a8:	bfb9                	j	906 <mini_vpprintf+0x4c>
- 9aa:	02000693          	li	a3,32
- 9ae:	c636                	sw	a3,12(sp)
- 9b0:	bfad                	j	92a <mini_vpprintf+0x70>
- 9b2:	07500713          	li	a4,117
- 9b6:	02e60a63          	beq	a2,a4,9ea <mini_vpprintf+0x130>
- 9ba:	07800713          	li	a4,120
- 9be:	06e60963          	beq	a2,a4,a30 <mini_vpprintf+0x176>
- 9c2:	07300713          	li	a4,115
- 9c6:	fce61ae3          	bne	a2,a4,99a <mini_vpprintf+0xe0>
- 9ca:	cc3e                	sw	a5,24(sp)
- 9cc:	00448793          	addi	a5,s1,4
- 9d0:	4084                	lw	s1,0(s1)
- 9d2:	c43e                	sw	a5,8(sp)
- 9d4:	8526                	mv	a0,s1
- 9d6:	3dc9                	jal	8a8 <strlen>
- 9d8:	47e2                	lw	a5,24(sp)
- 9da:	85aa                	mv	a1,a0
- 9dc:	08f05963          	blez	a5,a6e <mini_vpprintf+0x1b4>
- 9e0:	46c2                	lw	a3,16(sp)
- 9e2:	4632                	lw	a2,12(sp)
- 9e4:	1838                	addi	a4,sp,56
- 9e6:	8526                	mv	a0,s1
- 9e8:	a025                	j	a10 <mini_vpprintf+0x156>
- 9ea:	00448793          	addi	a5,s1,4
- 9ee:	c43e                	sw	a5,8(sp)
- 9f0:	ca85                	beqz	a3,a20 <mini_vpprintf+0x166>
- 9f2:	f8b60613          	addi	a2,a2,-117
- 9f6:	1018                	addi	a4,sp,32
- 9f8:	00163693          	seqz	a3,a2
- 9fc:	4088                	lw	a0,0(s1)
- 9fe:	4601                	li	a2,0
- a00:	45a9                	li	a1,10
- a02:	fbaff0ef          	jal	1bc <mini_itoa.part.0>
- a06:	46c2                	lw	a3,16(sp)
- a08:	4632                	lw	a2,12(sp)
- a0a:	1838                	addi	a4,sp,56
- a0c:	85aa                	mv	a1,a0
- a0e:	1008                	addi	a0,sp,32
- a10:	f0eff0ef          	jal	11e <mini_pad>
- a14:	4612                	lw	a2,4(sp)
- a16:	85aa                	mv	a1,a0
- a18:	1828                	addi	a0,sp,56
- a1a:	4782                	lw	a5,0(sp)
- a1c:	9782                	jalr	a5
- a1e:	b5e5                	j	906 <mini_vpprintf+0x4c>
- a20:	07500793          	li	a5,117
- a24:	1018                	addi	a4,sp,32
- a26:	4685                	li	a3,1
- a28:	fcf60ae3          	beq	a2,a5,9fc <mini_vpprintf+0x142>
- a2c:	4681                	li	a3,0
- a2e:	b7f9                	j	9fc <mini_vpprintf+0x142>
- a30:	4088                	lw	a0,0(s1)
- a32:	fa860613          	addi	a2,a2,-88
- a36:	00448793          	addi	a5,s1,4
- a3a:	1018                	addi	a4,sp,32
- a3c:	4685                	li	a3,1
- a3e:	00163613          	seqz	a2,a2
- a42:	45c1                	li	a1,16
- a44:	c43e                	sw	a5,8(sp)
- a46:	f76ff0ef          	jal	1bc <mini_itoa.part.0>
- a4a:	46c2                	lw	a3,16(sp)
- a4c:	4632                	lw	a2,12(sp)
- a4e:	85aa                	mv	a1,a0
- a50:	1838                	addi	a4,sp,56
- a52:	bf75                	j	a0e <mini_vpprintf+0x154>
- a54:	00448793          	addi	a5,s1,4
- a58:	c43e                	sw	a5,8(sp)
- a5a:	409c                	lw	a5,0(s1)
- a5c:	46c2                	lw	a3,16(sp)
- a5e:	4632                	lw	a2,12(sp)
- a60:	00f10fa3          	sb	a5,31(sp)
- a64:	1838                	addi	a4,sp,56
- a66:	4585                	li	a1,1
- a68:	01f10513          	addi	a0,sp,31
- a6c:	b755                	j	a10 <mini_vpprintf+0x156>
- a6e:	4612                	lw	a2,4(sp)
- a70:	8526                	mv	a0,s1
- a72:	b765                	j	a1a <mini_vpprintf+0x160>
+00000ad8 <mini_vpprintf>:
+ ad8:	fa410113          	addi	sp,sp,-92
+ adc:	caa2                	sw	s0,84(sp)
+ ade:	c8a6                	sw	s1,80(sp)
+ ae0:	cc86                	sw	ra,88(sp)
+ ae2:	c02a                	sw	a0,0(sp)
+ ae4:	c22e                	sw	a1,4(sp)
+ ae6:	8432                	mv	s0,a2
+ ae8:	84b6                	mv	s1,a3
+ aea:	ca02                	sw	zero,20(sp)
+ aec:	00044783          	lbu	a5,0(s0)
+ af0:	00140693          	addi	a3,s0,1
+ af4:	00f10fa3          	sb	a5,31(sp)
+ af8:	eb81                	bnez	a5,b08 <mini_vpprintf+0x30>
+ afa:	40e6                	lw	ra,88(sp)
+ afc:	4456                	lw	s0,84(sp)
+ afe:	4552                	lw	a0,20(sp)
+ b00:	44c6                	lw	s1,80(sp)
+ b02:	05c10113          	addi	sp,sp,92
+ b06:	8082                	ret
+ b08:	c636                	sw	a3,12(sp)
+ b0a:	02500713          	li	a4,37
+ b0e:	02e78063          	beq	a5,a4,b2e <mini_vpprintf+0x56>
+ b12:	4612                	lw	a2,4(sp)
+ b14:	4782                	lw	a5,0(sp)
+ b16:	4585                	li	a1,1
+ b18:	01f10513          	addi	a0,sp,31
+ b1c:	9782                	jalr	a5
+ b1e:	46b2                	lw	a3,12(sp)
+ b20:	c426                	sw	s1,8(sp)
+ b22:	8436                	mv	s0,a3
+ b24:	47d2                	lw	a5,20(sp)
+ b26:	44a2                	lw	s1,8(sp)
+ b28:	97aa                	add	a5,a5,a0
+ b2a:	ca3e                	sw	a5,20(sp)
+ b2c:	b7c1                	j	aec <mini_vpprintf+0x14>
+ b2e:	00144703          	lbu	a4,1(s0)
+ b32:	03000613          	li	a2,48
+ b36:	03000693          	li	a3,48
+ b3a:	00e10fa3          	sb	a4,31(sp)
+ b3e:	c632                	sw	a2,12(sp)
+ b40:	00240793          	addi	a5,s0,2
+ b44:	08d71263          	bne	a4,a3,bc8 <mini_vpprintf+0xf0>
+ b48:	843e                	mv	s0,a5
+ b4a:	4681                	li	a3,0
+ b4c:	4781                	li	a5,0
+ b4e:	45a5                	li	a1,9
+ b50:	a811                	j	b64 <mini_vpprintf+0x8c>
+ b52:	00279713          	slli	a4,a5,0x2
+ b56:	0405                	addi	s0,s0,1
+ b58:	97ba                	add	a5,a5,a4
+ b5a:	fff44703          	lbu	a4,-1(s0)
+ b5e:	0786                	slli	a5,a5,0x1
+ b60:	97b2                	add	a5,a5,a2
+ b62:	4685                	li	a3,1
+ b64:	fd070613          	addi	a2,a4,-48 # 40020fd0 <__global_pointer$+0x200207b8>
+ b68:	0ff67513          	zext.b	a0,a2
+ b6c:	fea5f3e3          	bgeu	a1,a0,b52 <mini_vpprintf+0x7a>
+ b70:	c299                	beqz	a3,b76 <mini_vpprintf+0x9e>
+ b72:	00e10fa3          	sb	a4,31(sp)
+ b76:	c83e                	sw	a5,16(sp)
+ b78:	46e1                	li	a3,24
+ b7a:	00f6d363          	bge	a3,a5,b80 <mini_vpprintf+0xa8>
+ b7e:	c836                	sw	a3,16(sp)
+ b80:	06c00613          	li	a2,108
+ b84:	4681                	li	a3,0
+ b86:	00c71863          	bne	a4,a2,b96 <mini_vpprintf+0xbe>
+ b8a:	00044703          	lbu	a4,0(s0)
+ b8e:	4685                	li	a3,1
+ b90:	0405                	addi	s0,s0,1
+ b92:	00e10fa3          	sb	a4,31(sp)
+ b96:	01f14603          	lbu	a2,31(sp)
+ b9a:	06400713          	li	a4,100
+ b9e:	06e60563          	beq	a2,a4,c08 <mini_vpprintf+0x130>
+ ba2:	02c76763          	bltu	a4,a2,bd0 <mini_vpprintf+0xf8>
+ ba6:	05800793          	li	a5,88
+ baa:	0af60263          	beq	a2,a5,c4e <mini_vpprintf+0x176>
+ bae:	06300793          	li	a5,99
+ bb2:	0cf60063          	beq	a2,a5,c72 <mini_vpprintf+0x19a>
+ bb6:	d231                	beqz	a2,afa <mini_vpprintf+0x22>
+ bb8:	4612                	lw	a2,4(sp)
+ bba:	4782                	lw	a5,0(sp)
+ bbc:	4585                	li	a1,1
+ bbe:	01f10513          	addi	a0,sp,31
+ bc2:	9782                	jalr	a5
+ bc4:	c426                	sw	s1,8(sp)
+ bc6:	bfb9                	j	b24 <mini_vpprintf+0x4c>
+ bc8:	02000693          	li	a3,32
+ bcc:	c636                	sw	a3,12(sp)
+ bce:	bfad                	j	b48 <mini_vpprintf+0x70>
+ bd0:	07500713          	li	a4,117
+ bd4:	02e60a63          	beq	a2,a4,c08 <mini_vpprintf+0x130>
+ bd8:	07800713          	li	a4,120
+ bdc:	06e60963          	beq	a2,a4,c4e <mini_vpprintf+0x176>
+ be0:	07300713          	li	a4,115
+ be4:	fce61ae3          	bne	a2,a4,bb8 <mini_vpprintf+0xe0>
+ be8:	cc3e                	sw	a5,24(sp)
+ bea:	00448793          	addi	a5,s1,4
+ bee:	4084                	lw	s1,0(s1)
+ bf0:	c43e                	sw	a5,8(sp)
+ bf2:	8526                	mv	a0,s1
+ bf4:	3dc9                	jal	ac6 <strlen>
+ bf6:	47e2                	lw	a5,24(sp)
+ bf8:	85aa                	mv	a1,a0
+ bfa:	08f05963          	blez	a5,c8c <mini_vpprintf+0x1b4>
+ bfe:	46c2                	lw	a3,16(sp)
+ c00:	4632                	lw	a2,12(sp)
+ c02:	1838                	addi	a4,sp,56
+ c04:	8526                	mv	a0,s1
+ c06:	a025                	j	c2e <mini_vpprintf+0x156>
+ c08:	00448793          	addi	a5,s1,4
+ c0c:	c43e                	sw	a5,8(sp)
+ c0e:	ca85                	beqz	a3,c3e <mini_vpprintf+0x166>
+ c10:	f8b60613          	addi	a2,a2,-117
+ c14:	1018                	addi	a4,sp,32
+ c16:	00163693          	seqz	a3,a2
+ c1a:	4088                	lw	a0,0(s1)
+ c1c:	4601                	li	a2,0
+ c1e:	45a9                	li	a1,10
+ c20:	d9cff0ef          	jal	1bc <mini_itoa.part.0>
+ c24:	46c2                	lw	a3,16(sp)
+ c26:	4632                	lw	a2,12(sp)
+ c28:	1838                	addi	a4,sp,56
+ c2a:	85aa                	mv	a1,a0
+ c2c:	1008                	addi	a0,sp,32
+ c2e:	cf0ff0ef          	jal	11e <mini_pad>
+ c32:	4612                	lw	a2,4(sp)
+ c34:	85aa                	mv	a1,a0
+ c36:	1828                	addi	a0,sp,56
+ c38:	4782                	lw	a5,0(sp)
+ c3a:	9782                	jalr	a5
+ c3c:	b5e5                	j	b24 <mini_vpprintf+0x4c>
+ c3e:	07500793          	li	a5,117
+ c42:	1018                	addi	a4,sp,32
+ c44:	4685                	li	a3,1
+ c46:	fcf60ae3          	beq	a2,a5,c1a <mini_vpprintf+0x142>
+ c4a:	4681                	li	a3,0
+ c4c:	b7f9                	j	c1a <mini_vpprintf+0x142>
+ c4e:	4088                	lw	a0,0(s1)
+ c50:	fa860613          	addi	a2,a2,-88
+ c54:	00448793          	addi	a5,s1,4
+ c58:	1018                	addi	a4,sp,32
+ c5a:	4685                	li	a3,1
+ c5c:	00163613          	seqz	a2,a2
+ c60:	45c1                	li	a1,16
+ c62:	c43e                	sw	a5,8(sp)
+ c64:	d58ff0ef          	jal	1bc <mini_itoa.part.0>
+ c68:	46c2                	lw	a3,16(sp)
+ c6a:	4632                	lw	a2,12(sp)
+ c6c:	85aa                	mv	a1,a0
+ c6e:	1838                	addi	a4,sp,56
+ c70:	bf75                	j	c2c <mini_vpprintf+0x154>
+ c72:	00448793          	addi	a5,s1,4
+ c76:	c43e                	sw	a5,8(sp)
+ c78:	409c                	lw	a5,0(s1)
+ c7a:	46c2                	lw	a3,16(sp)
+ c7c:	4632                	lw	a2,12(sp)
+ c7e:	00f10fa3          	sb	a5,31(sp)
+ c82:	1838                	addi	a4,sp,56
+ c84:	4585                	li	a1,1
+ c86:	01f10513          	addi	a0,sp,31
+ c8a:	b755                	j	c2e <mini_vpprintf+0x156>
+ c8c:	4612                	lw	a2,4(sp)
+ c8e:	8526                	mv	a0,s1
+ c90:	b765                	j	c38 <mini_vpprintf+0x160>
 
-00000a74 <printf>:
- a74:	fdc10113          	addi	sp,sp,-36
- a78:	ca32                	sw	a2,20(sp)
- a7a:	862a                	mv	a2,a0
- a7c:	c82e                	sw	a1,16(sp)
- a7e:	cc36                	sw	a3,24(sp)
- a80:	4581                	li	a1,0
- a82:	0814                	addi	a3,sp,16
- a84:	5e200513          	li	a0,1506
- a88:	c606                	sw	ra,12(sp)
- a8a:	ce3a                	sw	a4,28(sp)
- a8c:	d03e                	sw	a5,32(sp)
- a8e:	c036                	sw	a3,0(sp)
- a90:	352d                	jal	8ba <mini_vpprintf>
- a92:	40b2                	lw	ra,12(sp)
- a94:	02410113          	addi	sp,sp,36
- a98:	8082                	ret
+00000c92 <printf>:
+ c92:	fdc10113          	addi	sp,sp,-36
+ c96:	ca32                	sw	a2,20(sp)
+ c98:	862a                	mv	a2,a0
+ c9a:	6505                	lui	a0,0x1
+ c9c:	c82e                	sw	a1,16(sp)
+ c9e:	cc36                	sw	a3,24(sp)
+ ca0:	4581                	li	a1,0
+ ca2:	0814                	addi	a3,sp,16
+ ca4:	93250513          	addi	a0,a0,-1742 # 932 <__puts_uart>
+ ca8:	c606                	sw	ra,12(sp)
+ caa:	ce3a                	sw	a4,28(sp)
+ cac:	d03e                	sw	a5,32(sp)
+ cae:	c036                	sw	a3,0(sp)
+ cb0:	3525                	jal	ad8 <mini_vpprintf>
+ cb2:	40b2                	lw	ra,12(sp)
+ cb4:	02410113          	addi	sp,sp,36
+ cb8:	8082                	ret
 
-00000a9a <memset>:
- a9a:	962a                	add	a2,a2,a0
- a9c:	87aa                	mv	a5,a0
- a9e:	00c79363          	bne	a5,a2,aa4 <memset+0xa>
- aa2:	8082                	ret
- aa4:	00b78023          	sb	a1,0(a5)
- aa8:	0785                	addi	a5,a5,1
- aaa:	bfd5                	j	a9e <memset+0x4>
+00000cba <memset>:
+ cba:	962a                	add	a2,a2,a0
+ cbc:	87aa                	mv	a5,a0
+ cbe:	00c79363          	bne	a5,a2,cc4 <memset+0xa>
+ cc2:	8082                	ret
+ cc4:	00b78023          	sb	a1,0(a5)
+ cc8:	0785                	addi	a5,a5,1
+ cca:	bfd5                	j	cbe <memset+0x4>
 
-00000aac <memcpy>:
- aac:	4781                	li	a5,0
- aae:	00f61363          	bne	a2,a5,ab4 <memcpy+0x8>
- ab2:	8082                	ret
- ab4:	00f58733          	add	a4,a1,a5
- ab8:	00074683          	lbu	a3,0(a4)
- abc:	00f50733          	add	a4,a0,a5
- ac0:	0785                	addi	a5,a5,1
- ac2:	00d70023          	sb	a3,0(a4)
- ac6:	b7e5                	j	aae <memcpy+0x2>
+00000ccc <memcpy>:
+ ccc:	4781                	li	a5,0
+ cce:	00f61363          	bne	a2,a5,cd4 <memcpy+0x8>
+ cd2:	8082                	ret
+ cd4:	00f58733          	add	a4,a1,a5
+ cd8:	00074683          	lbu	a3,0(a4)
+ cdc:	00f50733          	add	a4,a0,a5
+ ce0:	0785                	addi	a5,a5,1
+ ce2:	00d70023          	sb	a3,0(a4)
+ ce6:	b7e5                	j	cce <memcpy+0x2>
 
-00000ac8 <SystemInit>:
- ac8:	400227b7          	lui	a5,0x40022
- acc:	4705                	li	a4,1
- ace:	c398                	sw	a4,0(a5)
- ad0:	400217b7          	lui	a5,0x40021
- ad4:	01080737          	lui	a4,0x1080
- ad8:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x200207ec>
- adc:	08170713          	addi	a4,a4,129 # 1080081 <lib_swi2c.c.56ead7c2+0x107d8e6>
- ae0:	c398                	sw	a4,0(a5)
- ae2:	009f0737          	lui	a4,0x9f0
- ae6:	c798                	sw	a4,8(a5)
- ae8:	40021737          	lui	a4,0x40021
- aec:	431c                	lw	a5,0(a4)
- aee:	00679693          	slli	a3,a5,0x6
- af2:	fe06dde3          	bgez	a3,aec <SystemInit+0x24>
- af6:	435c                	lw	a5,4(a4)
- af8:	400216b7          	lui	a3,0x40021
- afc:	9bf1                	andi	a5,a5,-4
- afe:	0027e793          	ori	a5,a5,2
- b02:	c35c                	sw	a5,4(a4)
- b04:	4721                	li	a4,8
- b06:	42dc                	lw	a5,4(a3)
- b08:	8bb1                	andi	a5,a5,12
- b0a:	fee79ee3          	bne	a5,a4,b06 <SystemInit+0x3e>
- b0e:	e00007b7          	lui	a5,0xe0000
- b12:	0f878793          	addi	a5,a5,248 # e00000f8 <__global_pointer$+0xbffff8e0>
- b16:	0007a023          	sw	zero,0(a5)
- b1a:	e00007b7          	lui	a5,0xe0000
- b1e:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8dc>
- b22:	08000713          	li	a4,128
- b26:	c398                	sw	a4,0(a5)
- b28:	8082                	ret
+00000ce8 <SystemInit>:
+ ce8:	400227b7          	lui	a5,0x40022
+ cec:	4705                	li	a4,1
+ cee:	c398                	sw	a4,0(a5)
+ cf0:	400217b7          	lui	a5,0x40021
+ cf4:	01080737          	lui	a4,0x1080
+ cf8:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x200207ec>
+ cfc:	08170713          	addi	a4,a4,129 # 1080081 <lib_swi2c.c.a2b53af0+0x107d82b>
+ d00:	c398                	sw	a4,0(a5)
+ d02:	009f0737          	lui	a4,0x9f0
+ d06:	c798                	sw	a4,8(a5)
+ d08:	40021737          	lui	a4,0x40021
+ d0c:	431c                	lw	a5,0(a4)
+ d0e:	00679693          	slli	a3,a5,0x6
+ d12:	fe06dde3          	bgez	a3,d0c <SystemInit+0x24>
+ d16:	435c                	lw	a5,4(a4)
+ d18:	400216b7          	lui	a3,0x40021
+ d1c:	9bf1                	andi	a5,a5,-4
+ d1e:	0027e793          	ori	a5,a5,2
+ d22:	c35c                	sw	a5,4(a4)
+ d24:	4721                	li	a4,8
+ d26:	42dc                	lw	a5,4(a3)
+ d28:	8bb1                	andi	a5,a5,12
+ d2a:	fee79ee3          	bne	a5,a4,d26 <SystemInit+0x3e>
+ d2e:	e00007b7          	lui	a5,0xe0000
+ d32:	0f878793          	addi	a5,a5,248 # e00000f8 <__global_pointer$+0xbffff8e0>
+ d36:	0007a023          	sw	zero,0(a5)
+ d3a:	e00007b7          	lui	a5,0xe0000
+ d3e:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8dc>
+ d42:	08000713          	li	a4,128
+ d46:	c398                	sw	a4,0(a5)
+ d48:	8082                	ret
 
-00000b2a <main>:
+00000d4a <main>:
 };
 
 uint8_t data[12];
 
 int main()
 {
- b2a:	1121                	addi	sp,sp,-24
- b2c:	ca06                	sw	ra,20(sp)
- b2e:	c822                	sw	s0,16(sp)
- b30:	c626                	sw	s1,12(sp)
+ d4a:	1131                	addi	sp,sp,-20
+ d4c:	c806                	sw	ra,16(sp)
+ d4e:	c622                	sw	s0,12(sp)
+ d50:	c426                	sw	s1,8(sp)
 	SystemInit();
- b32:	3f59                	jal	ac8 <SystemInit>
+ d52:	3f59                	jal	ce8 <SystemInit>
 	gpio_digital_write(i2c->pin_scl, GPIO_LOW);
- b34:	200004b7          	lui	s1,0x20000
- b38:	00048593          	mv	a1,s1
- b3c:	4198                	lw	a4,0(a1)
+ d54:	200004b7          	lui	s1,0x20000
+ d58:	00048593          	mv	a1,s1
+ d5c:	4198                	lw	a4,0(a1)
 	gpio_port_reg[ byte[0] ]->BSHR = mask;
- b3e:	6505                	lui	a0,0x1
- b40:	ccc50513          	addi	a0,a0,-820 # ccc <gpio_port_reg>
+ d5e:	6505                	lui	a0,0x1
+ d60:	eb850513          	addi	a0,a0,-328 # eb8 <gpio_port_reg>
 	uint32_t mask = 0x01 << byte[1];          // Shift by pin number
- b44:	00875793          	srli	a5,a4,0x8
+ d64:	00875793          	srli	a5,a4,0x8
 	gpio_port_reg[ byte[0] ]->BSHR = mask;
- b48:	0ff77713          	zext.b	a4,a4
- b4c:	00271693          	slli	a3,a4,0x2
- b50:	96aa                	add	a3,a3,a0
- b52:	4294                	lw	a3,0(a3)
+ d68:	0ff77713          	zext.b	a4,a4
+ d6c:	00271693          	slli	a3,a4,0x2
+ d70:	96aa                	add	a3,a3,a0
+ d72:	4294                	lw	a3,0(a3)
 	uint32_t mask = 0x01 << byte[1];          // Shift by pin number
- b54:	4605                	li	a2,1
- b56:	0ff7f293          	zext.b	t0,a5
- b5a:	00f617b3          	sll	a5,a2,a5
+ d74:	4605                	li	a2,1
+ d76:	0ff7f293          	zext.b	t0,a5
+ d7a:	00f617b3          	sll	a5,a2,a5
 	if(state == GPIO_LOW) mask = mask << 16;  // Shift by 16 if LOW, to Reset
- b5e:	07c2                	slli	a5,a5,0x10
+ d7e:	07c2                	slli	a5,a5,0x10
 	gpio_port_reg[ byte[0] ]->BSHR = mask;
- b60:	ca9c                	sw	a5,16(a3)
+ d80:	ca9c                	sw	a5,16(a3)
 	gpio_digital_write(i2c->pin_sda, GPIO_LOW);
- b62:	41dc                	lw	a5,4(a1)
+ d82:	41dc                	lw	a5,4(a1)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- b64:	028a                	slli	t0,t0,0x2
+ d84:	028a                	slli	t0,t0,0x2
 	uint32_t mask = 0x01 << byte[1];          // Shift by pin number
- b66:	0087d593          	srli	a1,a5,0x8
- b6a:	00b61633          	sll	a2,a2,a1
+ d86:	0087d593          	srli	a1,a5,0x8
+ d8a:	00b61633          	sll	a2,a2,a1
 	gpio_port_reg[ byte[0] ]->BSHR = mask;
- b6e:	0ff7f793          	zext.b	a5,a5
+ d8e:	0ff7f793          	zext.b	a5,a5
 	uint32_t mask = 0x01 << byte[1];          // Shift by pin number
- b72:	0ff5f313          	zext.b	t1,a1
+ d92:	0ff5f313          	zext.b	t1,a1
 	if(state == GPIO_LOW) mask = mask << 16;  // Shift by 16 if LOW, to Reset
- b76:	01061593          	slli	a1,a2,0x10
+ d96:	01061593          	slli	a1,a2,0x10
 	gpio_port_reg[ byte[0] ]->BSHR = mask;
- b7a:	00279613          	slli	a2,a5,0x2
- b7e:	9532                	add	a0,a0,a2
- b80:	4110                	lw	a2,0(a0)
+ d9a:	00279613          	slli	a2,a5,0x2
+ d9e:	9532                	add	a0,a0,a2
+ da0:	4110                	lw	a2,0(a0)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- b82:	40021537          	lui	a0,0x40021
+ da2:	40021537          	lui	a0,0x40021
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- b86:	030a                	slli	t1,t1,0x2
+ da6:	030a                	slli	t1,t1,0x2
 	gpio_port_reg[ byte[0] ]->BSHR = mask;
- b88:	ca0c                	sw	a1,16(a2)
+ da8:	ca0c                	sw	a1,16(a2)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- b8a:	01852383          	lw	t2,24(a0) # 40021018 <__global_pointer$+0x20020800>
- b8e:	4591                	li	a1,4
- b90:	00e59733          	sll	a4,a1,a4
- b94:	00776733          	or	a4,a4,t2
- b98:	00176713          	ori	a4,a4,1
- b9c:	cd18                	sw	a4,24(a0)
+ daa:	01852383          	lw	t2,24(a0) # 40021018 <__global_pointer$+0x20020800>
+ dae:	4591                	li	a1,4
+ db0:	00e59733          	sll	a4,a1,a4
+ db4:	00776733          	or	a4,a4,t2
+ db8:	00176713          	ori	a4,a4,1
+ dbc:	cd18                	sw	a4,24(a0)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- b9e:	4280                	lw	s0,0(a3)
- ba0:	473d                	li	a4,15
- ba2:	005713b3          	sll	t2,a4,t0
- ba6:	fff3c393          	not	t2,t2
- baa:	0083f3b3          	and	t2,t2,s0
- bae:	0076a023          	sw	t2,0(a3) # 40021000 <__global_pointer$+0x200207e8>
+ dbe:	4280                	lw	s0,0(a3)
+ dc0:	473d                	li	a4,15
+ dc2:	005713b3          	sll	t2,a4,t0
+ dc6:	fff3c393          	not	t2,t2
+ dca:	0083f3b3          	and	t2,t2,s0
+ dce:	0076a023          	sw	t2,0(a3) # 40021000 <__global_pointer$+0x200207e8>
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- bb2:	0006a383          	lw	t2,0(a3)
- bb6:	005592b3          	sll	t0,a1,t0
+ dd2:	0006a383          	lw	t2,0(a3)
+ dd6:	005592b3          	sll	t0,a1,t0
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- bba:	00671733          	sll	a4,a4,t1
+ dda:	00671733          	sll	a4,a4,t1
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- bbe:	0072e2b3          	or	t0,t0,t2
- bc2:	0056a023          	sw	t0,0(a3)
+ dde:	0072e2b3          	or	t0,t0,t2
+ de2:	0056a023          	sw	t0,0(a3)
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- bc6:	01852283          	lw	t0,24(a0)
- bca:	00f596b3          	sll	a3,a1,a5
+ de6:	01852283          	lw	t0,24(a0)
+ dea:	00f596b3          	sll	a3,a1,a5
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- bce:	fff74713          	not	a4,a4
+ dee:	fff74713          	not	a4,a4
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
- bd2:	0056e6b3          	or	a3,a3,t0
- bd6:	0016e693          	ori	a3,a3,1
- bda:	cd14                	sw	a3,24(a0)
+ df2:	0056e6b3          	or	a3,a3,t0
+ df6:	0016e693          	ori	a3,a3,1
+ dfa:	cd14                	sw	a3,24(a0)
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- bdc:	421c                	lw	a5,0(a2)
+ dfc:	421c                	lw	a5,0(a2)
 
 /*** I2C Device High Level Functions *****************************************/
 void swi2c_scan(i2c_device_t *i2c)
 {
 	// Scan through all possible addresses
 	for(uint8_t indx = 0; indx < 128; indx++)
- bde:	4401                	li	s0,0
+ dfe:	4401                	li	s0,0
 	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- be0:	8f7d                	and	a4,a4,a5
- be2:	c218                	sw	a4,0(a2)
+ e00:	8f7d                	and	a4,a4,a5
+ e02:	c218                	sw	a4,0(a2)
 	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
- be4:	4218                	lw	a4,0(a2)
- be6:	006597b3          	sll	a5,a1,t1
- bea:	8fd9                	or	a5,a5,a4
- bec:	c21c                	sw	a5,0(a2)
+ e04:	4218                	lw	a4,0(a2)
+ e06:	006597b3          	sll	a5,a1,t1
+ e0a:	8fd9                	or	a5,a5,a4
+ e0c:	c21c                	sw	a5,0(a2)
 	return swi2c_stop(i2c);
- bee:	3e2d                	jal	728 <swi2c_stop.constprop.0.isra.0>
+ e0e:	3e25                	jal	946 <swi2c_stop.constprop.0.isra.0>
 
 	swi2c_init(&dev);
 	swi2c_scan(&dev);
- bf0:	00048793          	mv	a5,s1
- bf4:	c03e                	sw	a5,0(sp)
- bf6:	00141493          	slli	s1,s0,0x1
- bfa:	0ff4f493          	zext.b	s1,s1
+ e10:	00048793          	mv	a5,s1
+ e14:	c03e                	sw	a5,0(sp)
+ e16:	00141493          	slli	s1,s0,0x1
+ e1a:	0ff4f493          	zext.b	s1,s1
 	{
 		uint8_t addr = indx << 1;
 
 		swi2c_start(i2c);
- bfe:	fb0ff0ef          	jal	3ae <swi2c_start.constprop.0>
+ e1e:	30c5                	jal	6fe <swi2c_start.constprop.0>
 		if(swi2c_master_tx_byte(i2c, addr) == I2C_OK) 
- c02:	8526                	mv	a0,s1
- c04:	3cdd                	jal	6fa <swi2c_master_tx_byte.constprop.0>
- c06:	e511                	bnez	a0,c12 <main+0xe8>
+ e20:	8526                	mv	a0,s1
+ e22:	eb2ff0ef          	jal	4d4 <swi2c_master_tx_byte.constprop.0>
+ e26:	e511                	bnez	a0,e32 <main+0xe8>
 			printf("Device 0x%02X Reponded\n", addr);
- c08:	6785                	lui	a5,0x1
- c0a:	85a6                	mv	a1,s1
- c0c:	cb478513          	addi	a0,a5,-844 # cb4 <main+0x18a>
- c10:	3595                	jal	a74 <printf>
+ e28:	6785                	lui	a5,0x1
+ e2a:	85a6                	mv	a1,s1
+ e2c:	ea078513          	addi	a0,a5,-352 # ea0 <main+0x156>
+ e30:	358d                	jal	c92 <printf>
 
 		swi2c_stop(i2c);
- c12:	3e19                	jal	728 <swi2c_stop.constprop.0.isra.0>
+ e32:	3e11                	jal	946 <swi2c_stop.constprop.0.isra.0>
 	for(uint8_t indx = 0; indx < 128; indx++)
- c14:	0405                	addi	s0,s0,1
- c16:	0ff47413          	zext.b	s0,s0
- c1a:	08000793          	li	a5,128
- c1e:	fcf41ce3          	bne	s0,a5,bf6 <main+0xcc>
-
-	i2c_err_t stat = I2C_OK;
-
-	// Gaurd each step from failure
-	// Send START Condition and address byte
-	if( (stat = swi2c_start(i2c)) == I2C_OK && 
- c22:	f8cff0ef          	jal	3ae <swi2c_start.constprop.0>
- c26:	e549                	bnez	a0,cb0 <main+0x186>
-		(stat = swi2c_master_tx_byte(i2c, i2c->address)) == I2C_OK)
- c28:	4782                	lw	a5,0(sp)
- c2a:	0087c503          	lbu	a0,8(a5)
- c2e:	34f1                	jal	6fa <swi2c_master_tx_byte.constprop.0>
-	if( (stat = swi2c_start(i2c)) == I2C_OK && 
- c30:	e141                	bnez	a0,cb0 <main+0x186>
-	{
-		// Sed the Register Byte
+ e34:	0405                	addi	s0,s0,1
+ e36:	0ff47413          	zext.b	s0,s0
+ e3a:	08000793          	li	a5,128
+ e3e:	fcf41ce3          	bne	s0,a5,e16 <main+0xcc>
 		swi2c_master_tx_byte(i2c, reg);
- c32:	03b00513          	li	a0,59
- c36:	34d1                	jal	6fa <swi2c_master_tx_byte.constprop.0>
 
 		// Repeat the START Condition
 		swi2c_start(i2c);
- c38:	f76ff0ef          	jal	3ae <swi2c_start.constprop.0>
 		// Send address in Read Mode
 		swi2c_master_tx_byte(i2c, i2c->address | 0x01);
- c3c:	4782                	lw	a5,0(sp)
- c3e:	0087c503          	lbu	a0,8(a5)
- c42:	00156513          	ori	a0,a0,1
- c46:	3c55                	jal	6fa <swi2c_master_tx_byte.constprop.0>
- c48:	200007b7          	lui	a5,0x20000
- c4c:	01878713          	addi	a4,a5,24 # 20000018 <data>
+ e42:	20000437          	lui	s0,0x20000
+	if( (stat = swi2c_start(i2c)) == I2C_OK && 
+ e46:	3865                	jal	6fe <swi2c_start.constprop.0>
+ e48:	e929                	bnez	a0,e9a <main+0x150>
+		(stat = swi2c_master_tx_byte(i2c, i2c->address)) == I2C_OK)
+ e4a:	4782                	lw	a5,0(sp)
+ e4c:	0087c503          	lbu	a0,8(a5)
+ e50:	e84ff0ef          	jal	4d4 <swi2c_master_tx_byte.constprop.0>
+	if( (stat = swi2c_start(i2c)) == I2C_OK && 
+ e54:	e139                	bnez	a0,e9a <main+0x150>
+		swi2c_master_tx_byte(i2c, reg);
+ e56:	03b00513          	li	a0,59
+ e5a:	e7aff0ef          	jal	4d4 <swi2c_master_tx_byte.constprop.0>
+		swi2c_start(i2c);
+ e5e:	8a1ff0ef          	jal	6fe <swi2c_start.constprop.0>
+		swi2c_master_tx_byte(i2c, i2c->address | 0x01);
+ e62:	4782                	lw	a5,0(sp)
+ e64:	01840493          	addi	s1,s0,24 # 20000018 <data>
+ e68:	0087c503          	lbu	a0,8(a5)
+ e6c:	00156513          	ori	a0,a0,1
+ e70:	e64ff0ef          	jal	4d4 <swi2c_master_tx_byte.constprop.0>
+ e74:	01840793          	addi	a5,s0,24
 
 		while(--size >= 1)
- c50:	80b18793          	addi	a5,gp,-2037 # 20000023 <data+0xb>
- c54:	c23e                	sw	a5,4(sp)
-	for(uint8_t indx = 0; indx < 128; indx++)
- c56:	4421                	li	s0,8
-	uint8_t byte = 0x00;
- c58:	4481                	li	s1,0
- c5a:	c43a                	sw	a4,8(sp)
-	while(index--) byte = (byte << 1) | master_rx_bit(i2c);
- c5c:	e50ff0ef          	jal	2ac <master_rx_bit.constprop.0>
- c60:	00149793          	slli	a5,s1,0x1
- c64:	147d                	addi	s0,s0,-1
- c66:	8fc9                	or	a5,a5,a0
- c68:	0ff47413          	zext.b	s0,s0
- c6c:	4722                	lw	a4,8(sp)
- c6e:	0ff7f493          	zext.b	s1,a5
- c72:	f465                	bnez	s0,c5a <main+0x130>
-	master_tx_bit(i2c, ack);
- c74:	4501                	li	a0,0
- c76:	3241                	jal	5f6 <master_tx_bit.constprop.0.isra.0>
 		{
 			*data = swi2c_master_rx_byte(i2c, I2C_ACK);
- c78:	4722                	lw	a4,8(sp)
+ e78:	4501                	li	a0,0
+ e7a:	c23e                	sw	a5,4(sp)
+ e7c:	c30ff0ef          	jal	2ac <swi2c_master_rx_byte.constprop.0>
+ e80:	4792                	lw	a5,4(sp)
 		while(--size >= 1)
- c7a:	4792                	lw	a5,4(sp)
+ e82:	80b18713          	addi	a4,gp,-2037 # 20000023 <data+0xb>
 			*data = swi2c_master_rx_byte(i2c, I2C_ACK);
- c7c:	00970023          	sb	s1,0(a4) # 40021000 <__global_pointer$+0x200207e8>
+ e86:	00a78023          	sb	a0,0(a5)
 			++data;
- c80:	0705                	addi	a4,a4,1
+ e8a:	0785                	addi	a5,a5,1
 		while(--size >= 1)
- c82:	fcf71ae3          	bne	a4,a5,c56 <main+0x12c>
- c86:	47a1                	li	a5,8
- c88:	c23e                	sw	a5,4(sp)
-	while(index--) byte = (byte << 1) | master_rx_bit(i2c);
- c8a:	e22ff0ef          	jal	2ac <master_rx_bit.constprop.0>
- c8e:	4792                	lw	a5,4(sp)
- c90:	0406                	slli	s0,s0,0x1
- c92:	8c49                	or	s0,s0,a0
- c94:	17fd                	addi	a5,a5,-1
- c96:	0ff7f793          	zext.b	a5,a5
- c9a:	0ff47413          	zext.b	s0,s0
- c9e:	f7ed                	bnez	a5,c88 <main+0x15e>
-	master_tx_bit(i2c, ack);
- ca0:	4505                	li	a0,1
- ca2:	3a91                	jal	5f6 <master_tx_bit.constprop.0.isra.0>
+ e8c:	fee796e3          	bne	a5,a4,e78 <main+0x12e>
 		}
 
 		// Last byte read has NACK bit set
 		*data = swi2c_master_rx_byte(i2c, I2C_NACK);
- ca4:	200007b7          	lui	a5,0x20000
- ca8:	01878793          	addi	a5,a5,24 # 20000018 <data>
- cac:	008785a3          	sb	s0,11(a5)
+ e90:	4505                	li	a0,1
+ e92:	c1aff0ef          	jal	2ac <swi2c_master_rx_byte.constprop.0>
+ e96:	00a485a3          	sb	a0,11(s1) # 2000000b <dev+0xb>
 	}
 
 	swi2c_stop(i2c);
- cb0:	3ca5                	jal	728 <swi2c_stop.constprop.0.isra.0>
+ e9a:	3475                	jal	946 <swi2c_stop.constprop.0.isra.0>
 	while (1)
- cb2:	bf85                	j	c22 <main+0xf8>
- cb4:	6544                	.insn	2, 0x6544
- cb6:	6976                	.insn	2, 0x6976
- cb8:	30206563          	bltu	zero,sp,fc2 <_data_lma+0x2e6>
- cbc:	2578                	.insn	2, 0x2578
- cbe:	3230                	.insn	2, 0x3230
- cc0:	2058                	.insn	2, 0x2058
- cc2:	6552                	.insn	2, 0x6552
- cc4:	6f70                	.insn	2, 0x6f70
- cc6:	646e                	.insn	2, 0x646e
- cc8:	6465                	lui	s0,0x19
- cca:	000a                	c.slli	zero,0x2
+ e9c:	b76d                	j	e46 <main+0xfc>
+ e9e:	0000                	unimp
+ ea0:	6544                	.insn	2, 0x6544
+ ea2:	6976                	.insn	2, 0x6976
+ ea4:	30206563          	bltu	zero,sp,11ae <_data_lma+0x2e6>
+ ea8:	2578                	.insn	2, 0x2578
+ eaa:	3230                	.insn	2, 0x3230
+ eac:	2058                	.insn	2, 0x2058
+ eae:	6552                	.insn	2, 0x6552
+ eb0:	6f70                	.insn	2, 0x6f70
+ eb2:	646e                	.insn	2, 0x646e
+ eb4:	6465                	lui	s0,0x19
+ eb6:	000a                	c.slli	zero,0x2
 
-00000ccc <gpio_port_reg>:
- ccc:	0800 4001 0000 0000 1000 4001 1400 4001     ...@.......@...@
+00000eb8 <gpio_port_reg>:
+ eb8:	0800 4001 0000 0000 1000 4001 1400 4001     ...@.......@...@

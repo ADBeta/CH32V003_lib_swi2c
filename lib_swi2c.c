@@ -141,12 +141,12 @@ static inline void gpio_set_mode(const gpio_pin_t pin, const gpio_mode_t mode)
 
 /*** Software I2C Functions **************************************************/
 // Asserting I2C lines is when they are OUTPUT Pulling LOW
-#define ASSERT_SCL gpio_set_mode(i2c->pin_scl, OUTPUT_10MHZ_PP); 
-#define ASSERT_SDA gpio_set_mode(i2c->pin_sda, OUTPUT_10MHZ_PP);
+#define ASSERT_SCL gpio_set_mode(i2c->pin_scl, OUTPUT_10MHZ_PP) 
+#define ASSERT_SDA gpio_set_mode(i2c->pin_sda, OUTPUT_10MHZ_PP)
 
 // Releasing I2C lines is setting them INPUT FLOATING, Pulled HIGH Externally
-#define RELEASE_SCL gpio_set_mode(i2c->pin_scl, INPUT_FLOATING); 
-#define RELEASE_SDA gpio_set_mode(i2c->pin_sda, INPUT_FLOATING);
+#define RELEASE_SCL gpio_set_mode(i2c->pin_scl, INPUT_FLOATING) 
+#define RELEASE_SDA gpio_set_mode(i2c->pin_sda, INPUT_FLOATING)
 
 /*** Helper Functions ********************************************************/
 // Waits for the calculated amount of time (Limits bus speed)
@@ -167,46 +167,6 @@ static i2c_err_t clk_stretch(const gpio_pin_t scl)
 	}
 
 	return I2C_OK;
-}
-
-static i2c_err_t master_tx_bit(const i2c_device_t *i2c, const bool bit)
-{
-	// Set the Data line depending on bit
-	if(bit)
-	{
-		RELEASE_SDA;
-	} else {
-		ASSERT_SDA;
-	}
-
-	wait();
-	RELEASE_SCL;   // SCL HIGH
-	wait();
-
-	// Clock stretch, wait for SCL to go LOW
-	i2c_err_t stat = clk_stretch(i2c->pin_scl);
-	ASSERT_SCL;   // SCL LOW
-	
-	// I2C_OK if successful, propegates error if not
-	return stat;
-}
-
-static bool master_rx_bit(const i2c_device_t *i2c)
-{
-	bool bit = 0;
-	// Release the SDA pin so the slave can set data, then release SCL
-	// to request data
-	RELEASE_SDA;
-	RELEASE_SCL;
-
-	// Wait for clk stretch, Only read pin if it's OK
-	if(clk_stretch(i2c->pin_scl) == I2C_OK)
-	{
-		bit = (bool)gpio_digital_read(i2c->pin_sda);
-	}
-
-	ASSERT_SCL; // SCL LOW
-	return bit;
 }
 
 /*** Library Functions *******************************************************/
@@ -278,12 +238,40 @@ i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data)
 	uint8_t index = 8;
 	while(index--)
 	{
-		master_tx_bit(i2c, data & 0x80);
+		// Transmit one bit at a time
+		if(data & 0x01) RELEASE_SDA; else ASSERT_SDA;
+
+		wait();
+		RELEASE_SCL;   // SCL HIGH
+		wait();
+		// Clock stretch, wait for SCL to go LOW
+		stat = clk_stretch(i2c->pin_scl);
+		ASSERT_SCL;    // SCL LOW
+	
+
+		// Shift the data by one
 		data = data << 1;
 	}
 	
-	// Read ACK bit (0 = ACK, 1 = NACK)
-	if( (stat = master_rx_bit(i2c)) == I2C_NACK) stat = I2C_ERR_NACK;
+	// Read ACK bit (0 = ACK, 1 = NACK), if Clock stretching is successful
+	if(stat == I2C_OK)
+	{
+		// Release the SDA pin so the slave can set data, then release SCL
+		// to request data
+		RELEASE_SDA;
+		RELEASE_SCL;
+
+		// Wait for clk stretch, Only read pin if it's OK
+		if(clk_stretch(i2c->pin_scl) == I2C_OK)
+		{
+			if(gpio_digital_read(i2c->pin_sda) == I2C_NACK)
+				stat = I2C_ERR_NACK;
+		}
+
+		// SCL LOW for next loop
+		ASSERT_SCL;
+	}
+
 	return stat;
 }
 
@@ -292,10 +280,35 @@ uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack)
 	// Read bits MSB First
 	uint8_t index = 8;
 	uint8_t byte = 0x00;
-	while(index--) byte = (byte << 1) | master_rx_bit(i2c);
-	
+	while(index--) 
+	{
+		// Release the SDA pin so the slave can set data, then release SCL
+		// to request data
+		RELEASE_SDA;
+		RELEASE_SCL;
+
+		// Wait for clk stretch, Only read pin if it's OK
+		if(clk_stretch(i2c->pin_scl) == I2C_OK)
+		{
+			// Shift the byte by 1
+			byte = byte << 1;
+			// If SDA is HIGH, set the LSB to 1
+			if(gpio_digital_read(i2c->pin_sda)) byte |= 0x01;
+		}
+
+		// SCL LOW for next loop
+		ASSERT_SCL;
+	}
+
 	// Write ACK Bit, ACK (0) = Read More,  NACK (1) = Stop Reading
-	master_tx_bit(i2c, ack);
+	if(ack) RELEASE_SDA; else ASSERT_SDA;
+	wait();
+	RELEASE_SCL;   // SCL HIGH
+	wait();
+	// Clock stretch, wait for SCL to go LOW
+	clk_stretch(i2c->pin_scl);
+	ASSERT_SCL;    // SCL LOW
+	
 	return byte;
 }
 
