@@ -120,7 +120,8 @@ static inline gpio_state_t gpio_digital_read(const gpio_pin_t pin)
 	return GPIO_LOW;
 }
 
-/// NOTE: Modified to be slimmer and lightweight
+/// NOTE: Modified to be slimmer and lightweight. No INPUT_PULLUP/PULLDOWN, and
+/// RCC Register setting is now in its own function to improve speed here.
 /// @breif Sets the Config and other needed Registers for a passed pin and mode
 /// @param gpio_pin_t pin, the GPIO Pin & Port Variable (e.g GPIO_PD6)
 /// @param gpio_mode_t mode, the GPIO Mode Variable (e.g OUTPUT_10MHZ_PP)
@@ -130,13 +131,26 @@ static inline void gpio_set_mode(const gpio_pin_t pin, const gpio_mode_t mode)
 {
 	// Make array of uint8_t from [pin] enum. See definition for details
 	uint8_t *byte = (uint8_t *)&pin;
+
+	// Clear then set the GPIO Config Register
+	//gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
+	//gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
+	gpio_port_reg[byte[0]]->CFGLR = 
+		(gpio_port_reg[byte[0]]->CFGLR & ~(0x0F << (4 * byte[1]))) 
+		| (mode << (4 * byte[1]));
+}
+
+/// @breif Sets the RCC Register for the passed pin ONLY
+/// @param gpio_pin_t pin, the GPIO Pin & Port Variable (e.g GPIO_PD6)
+/// @return None
+__attribute__((always_inline))
+static inline void gpio_set_rcc(const gpio_pin_t pin)
+{
+	// Make array of uint8_t from [pin] enum. See definition for details
+	uint8_t *byte = (uint8_t *)&pin;
 	
 	// Set the RCC Register to enable clock on the specified port
 	*RCC_APB2PCENR |= (APB2PCENR_AFIO | (APB2PCENR_IOPxEN << byte[0]));
-
-	// Clear then set the GPIO Config Register
-	gpio_port_reg[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
-	gpio_port_reg[ byte[0] ]->CFGLR |=           mode << (4 * byte[1]);
 }
 
 
@@ -173,6 +187,10 @@ static i2c_err_t clk_stretch(const gpio_pin_t scl)
 /*** Library Functions *******************************************************/
 i2c_err_t swi2c_init(i2c_device_t *i2c)
 {
+	// Enable the Ports SDA and SCL are attached to
+	gpio_set_rcc(i2c->pin_scl);
+	gpio_set_rcc(i2c->pin_sda);
+	
 	// Set the Output register to LOW (Pulldown in output)
 	gpio_digital_write(i2c->pin_scl, GPIO_LOW);
 	gpio_digital_write(i2c->pin_sda, GPIO_LOW);
@@ -256,7 +274,7 @@ i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data)
 	}
 
 	// Read ACK bit (0 = ACK, 1 = NACK), if Clock stretching is successful
-	//if(stat == I2C_OK)
+	if(stat == I2C_OK)
 	{
 		// Release the SDA pin so the slave can set data, then release SCL
 		// to request data
@@ -313,8 +331,6 @@ uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack)
 	
 	return byte;
 }
-
-
 
 
 /*** I2C Device High Level Functions *****************************************/
