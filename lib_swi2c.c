@@ -23,6 +23,7 @@
 typedef enum {
 	INPUT_ANALOG       = 0x00,
 	INPUT_FLOATING     = 0x04,
+	INPUT_PUSHPULL     = 0x08,
 	// NOTE: Removed to simplify code (speed)
 	// Mapped to INPUT_PP, Sets OUTDR based on the upper nibble
 	// INPUT_PULLUP       = 0x18,
@@ -141,11 +142,11 @@ static inline void gpio_set_mode(const gpio_pin_t pin, const gpio_mode_t mode)
 
 /*** Software I2C Functions **************************************************/
 // Asserting I2C lines is when they are OUTPUT Pulling LOW
-#define ASSERT_SCL gpio_set_mode(i2c->pin_scl, OUTPUT_10MHZ_PP) 
+#define ASSERT_SCL gpio_set_mode(i2c->pin_scl, OUTPUT_10MHZ_PP)
 #define ASSERT_SDA gpio_set_mode(i2c->pin_sda, OUTPUT_10MHZ_PP)
 
 // Releasing I2C lines is setting them INPUT FLOATING, Pulled HIGH Externally
-#define RELEASE_SCL gpio_set_mode(i2c->pin_scl, INPUT_FLOATING) 
+#define RELEASE_SCL gpio_set_mode(i2c->pin_scl, INPUT_FLOATING)
 #define RELEASE_SDA gpio_set_mode(i2c->pin_sda, INPUT_FLOATING)
 
 /*** Helper Functions ********************************************************/
@@ -239,7 +240,8 @@ i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data)
 	while(index--)
 	{
 		// Transmit one bit at a time
-		if(data & 0x01) RELEASE_SDA; else ASSERT_SDA;
+		uint8_t bit = data & 0x80;
+		if(bit) { RELEASE_SDA; } else { ASSERT_SDA; }
 
 		wait();
 		RELEASE_SCL;   // SCL HIGH
@@ -252,9 +254,9 @@ i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data)
 		// Shift the data by one
 		data = data << 1;
 	}
-	
+
 	// Read ACK bit (0 = ACK, 1 = NACK), if Clock stretching is successful
-	if(stat == I2C_OK)
+	//if(stat == I2C_OK)
 	{
 		// Release the SDA pin so the slave can set data, then release SCL
 		// to request data
@@ -301,7 +303,7 @@ uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack)
 	}
 
 	// Write ACK Bit, ACK (0) = Read More,  NACK (1) = Stop Reading
-	if(ack) RELEASE_SDA; else ASSERT_SDA;
+	if(ack) { RELEASE_SDA; } else { ASSERT_SDA; }
 	wait();
 	RELEASE_SCL;   // SCL HIGH
 	wait();
@@ -318,6 +320,7 @@ uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack)
 /*** I2C Device High Level Functions *****************************************/
 void swi2c_scan(i2c_device_t *i2c)
 {
+	printf("\nScanning....\n");
 	// Scan through all possible addresses
 	for(uint8_t indx = 0; indx < 128; indx++)
 	{
@@ -325,10 +328,12 @@ void swi2c_scan(i2c_device_t *i2c)
 
 		swi2c_start(i2c);
 		if(swi2c_master_tx_byte(i2c, addr) == I2C_OK) 
-			printf("Device 0x%02X Reponded\n", addr);
+			printf("\t- Device 0x%02X Reponded\n", addr);
 
 		swi2c_stop(i2c);
 	}
+	
+	printf("Done Scanning\n");
 }
 
 

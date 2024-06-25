@@ -29,5 +29,6 @@ int main()
 	while (1)
 	{
 		swi2c_master_receive(&dev, 0x3B, data, 12);
+		printf("0x%02X%02X\n", data[0], data[1]);
 	}
 }
