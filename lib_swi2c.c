@@ -86,7 +86,6 @@ static gpio_port_reg_t *gpio_port_reg[4] = {
 	GPIO_PORTD,
 };
 
-
 /// @breif Sets the OUTDR Register for the passed Pin
 /// @param gpio_pin_t pin, the GPIO Pin & Port Variable (e.g GPIO_PD6)
 /// @param gpio_state_t state, GPIO State to be set (e.g GPIO_HIGH)
@@ -170,7 +169,6 @@ __attribute__((always_inline)) static inline void wait()
 {
 
 }
-
 
 static i2c_err_t clk_stretch(const gpio_pin_t scl)
 {
