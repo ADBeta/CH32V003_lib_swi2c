@@ -1,18 +1,35 @@
 /******************************************************************************
-* lib_GPIOCTRL
-* A runtime-capable GPIO Library, with Digital Read/Write and
-* TODO: Analog Read & Analog Write/PWM
+* lib_swi2c - Software I2C Library for the Ch32V003 
 *
+* See GitHub Repo for more information: 
+* https://github.com/ADBeta/CH32V003_lib_swi2c
 *
-* See GitHub for details: https://github.com/ADBeta/CH32V003_lib_GPIOCTRL
+* 03 Sep 2024    Ver 2.2
 *
-* ADBeta (c) 2024
+* Released under the MIT Licence
+* Copyright ADBeta (c) 2024
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to
+* deal in the Software without restriction, including without limitation the 
+* rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+* sell copies of the Software, and to permit persons to whom the Software is 
+* furnished to do so, subject to the following conditions:
+* The above copyright notice and this permission notice shall be included in 
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+* OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+* USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 #include "lib_swi2c.h"
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdio.h>
 
 /*** Copied from lib_GPIOCTRL ************************************************/
 // https://github.com/ADBeta/CH32V003_lib_GPIOCTRL
@@ -332,22 +349,20 @@ uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack)
 
 
 /*** I2C Device High Level Functions *****************************************/
-void swi2c_scan(i2c_device_t *i2c)
+void swi2c_scan(i2c_device_t *i2c, void (*callback)(const uint8_t))
 {
-	printf("\nScanning....\n");
-	// Scan through all possible addresses
-	for(uint8_t indx = 0; indx < 128; indx++)
+	// If the callback function is null, exit
+	if(callback == NULL) return;
+
+	// Scan through every address, getting a ping() response
+	for(uint8_t addr = 0x00; addr < 0x7F; addr++)
 	{
-		uint8_t addr = indx << 1;
-
+		// If the address responds, call the callback function
 		swi2c_start(i2c);
-		if(swi2c_master_tx_byte(i2c, addr) == I2C_OK) 
-			printf("\t- Device 0x%02X Reponded\n", addr);
-
+		if(swi2c_master_tx_byte(i2c, addr << 1) == I2C_OK) callback(addr);
 		swi2c_stop(i2c);
 	}
-	
-	printf("Done Scanning\n");
+
 }
 
 
@@ -361,7 +376,7 @@ i2c_err_t swi2c_master_transmit(i2c_device_t *i2c,
 	// Gaurd each step from failure
 	// Send START Condition and address byte
 	if( (stat = swi2c_start(i2c)) == I2C_OK && 
-		(stat = swi2c_master_tx_byte(i2c, i2c->address)) == I2C_OK)
+		(stat = swi2c_master_tx_byte(i2c, (i2c->address << 1) & 0xFE)) == I2C_OK)
 	{
 		swi2c_master_tx_byte(i2c, reg);
 		while(size)
@@ -388,15 +403,15 @@ i2c_err_t swi2c_master_receive(i2c_device_t *i2c,
 	// Gaurd each step from failure
 	// Send START Condition and address byte
 	if( (stat = swi2c_start(i2c)) == I2C_OK && 
-		(stat = swi2c_master_tx_byte(i2c, i2c->address)) == I2C_OK)
+		(stat = swi2c_master_tx_byte(i2c, (i2c->address << 1) & 0xFE)) == I2C_OK)
 	{
-		// Sed the Register Byte
+		// Send the Register Byte
 		swi2c_master_tx_byte(i2c, reg);
 
 		// Repeat the START Condition
 		swi2c_start(i2c);
 		// Send address in Read Mode
-		swi2c_master_tx_byte(i2c, i2c->address | 0x01);
+		swi2c_master_tx_byte(i2c, (i2c->address << 1) | 0x01);
 
 		while(--size >= 1)
 		{
@@ -411,5 +426,3 @@ i2c_err_t swi2c_master_receive(i2c_device_t *i2c,
 	swi2c_stop(i2c);
 	return stat;
 }
-
-

@@ -1,6 +1,30 @@
 /******************************************************************************
-* 
-* ADBeta (c)    Jun 2024    Ver 0.5.0
+* lib_swi2c - Software I2C Library for the Ch32V003 
+*
+* See GitHub Repo for more information: 
+* https://github.com/ADBeta/CH32V003_lib_swi2c
+*
+* 04 Sep 2024    Ver 2.2
+*
+* Released under the MIT Licence
+* Copyright ADBeta (c) 2024
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to
+* deal in the Software without restriction, including without limitation the 
+* rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+* sell copies of the Software, and to permit persons to whom the Software is 
+* furnished to do so, subject to the following conditions:
+* The above copyright notice and this permission notice shall be included in 
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+* OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+* USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 #ifndef LIB_SWI2C_H
 #define LIB_SWI2C_H
@@ -108,12 +132,12 @@ i2c_err_t swi2c_master_tx_byte(i2c_device_t *i2c, uint8_t data);
 /// @return i2c_err_t return state
 uint8_t swi2c_master_rx_byte(i2c_device_t *i2c, bool ack);
 
-
-
-/// @breif Scans the Interface for devices that respond. Prints their address
+/// @breif Scans the Interface for devices that respond. Calls the callback 
+/// function if any devices respond
 /// @param i2c_device_t i2c, I2C Device Struct
+/// @param callback function (takes uint8_t)
 /// @return none
-void swi2c_scan(i2c_device_t *i2c);
+void swi2c_scan(i2c_device_t *i2c, void (*callback)(const uint8_t));
 
 /// @breif Transmits data to a given Address
 /// @param i2c_device_t i2c, I2C Device Struct
@@ -123,7 +147,6 @@ void swi2c_scan(i2c_device_t *i2c);
 /// @return i2c_err_t return state
 i2c_err_t swi2c_master_transmit(i2c_device_t *i2c, 
                         const uint8_t reg, const uint8_t *data, uint16_t size);
-
 
 /// @breif Receive data from a given Address
 /// @param i2c_device_t i2c, I2C Device Struct
